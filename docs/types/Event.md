@@ -11,6 +11,13 @@ User Scenarios
 
 Description
 -----------
+Admins want to be able to publicize an event that is occurring in the future.  Users will see the event details and have the ability to respond whether they will attend.  In addition, users will be able to see other details of the event including:
+- event title
+- event description
+- event date
+- event start time/(optional) end time
+- event location name and coordinates
+- 
 
 Limitations
 -----------
