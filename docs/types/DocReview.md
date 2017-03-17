@@ -14,16 +14,17 @@ Admins will be able to distribute a document or copy text and solicit comments o
 
 Requirements
 ------------
-1. Admin should be able to solicit approval or comment from one or more users.
-2. Admin should be able to include copy text or an attached document(s) for the user to review.
-3. Admin should be able to add a PDF file for review/approval.
-4. Admin should be able to define one or more users for review/approval.
-5. Admin should be able to define approval path - either group approval or single-file pathway approval.
-6. Admin should be able to request user response - either reviewed (yes/no) or approved (yes/no/[partially?]) and be able to optionally include/require comments either way.
-7. Admin should be able to determine the behavior if the user does not approval the document.
-8. User should be able to see approval/review topic on their topic feed.
-9. User should be able to view document/copy text within their device.
-10. User should be able to provide feedback for the approval process.
+1. Admin should be able to create a new approval/review topic.
+2. Admin should be able to solicit approval or comment from one or more users.
+3. Admin should be able to include copy text or an attached document(s) for the user to review.
+4. Admin should be able to add a PDF file for review/approval.
+5. Admin should be able to define one or more users for review/approval.
+6. Admin should be able to define approval path - either group approval or single-file pathway approval.
+7. Admin should be able to request user response - either reviewed (yes/no) or approved (yes/no/[partially?]) and be able to optionally include/require comments either way.
+8. Admin should be able to determine the behavior if the user does not approval the document.
+9. User should be able to see approval/review topic on their topic feed.
+10. User should be able to view document/copy text within their device.
+11. User should be able to provide feedback for the approval process.
 
 Limitations
 -----------
