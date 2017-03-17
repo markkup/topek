@@ -3,18 +3,24 @@ Event
 
 User Scenarios
 --------------
-1. Admin is having a meeting and wants to share with attendees.
+1. Admin is having a meeting or general event and wants to share with attendees.
 2. Admin wants to know who can attend: Yes|Maybe|No
 3. Admin wants to provide an early reminder (Alert) for the event.
-4. Admin can optionally show who's attending in the topic.
-5. Admin can provide a name and location for the event.
-6. Admins can specify whether or not "Favorite Pics from Event" are able to be added to the event (maybe?)
-7. Admins can specify whether or not chat is available for this event
-8. Type Extras are available for events.
+4. Admin wants to choose whether or not users can see other attendees.
+5. Admin wants to be able to name the event and provide a description.
+6. Admin wants users to be able to add favorite pictures from the event to the topic.
+7. Admin wants to be able to allow users to chat aboue the event (or maybe NOT allow them to chat)
+8. Admin want to be able to optionally select Type Extras for events.
+9. Users need to be able to view the event in their topic feed.
+10. Users need to be able to view the event details.
+11. Users need to be able to respond whether they will be attending the event.
+12. Users want to add the event to their calendar - either after they indicate they are attending or manually by clicking a button.
+13. Users want to be able to get quick directions for the event.
+14.
 
 Description
 -----------
-Admins want to be able to publicize an event that is occurring in the future.  Users will see the event details and have the ability to respond whether they will attend.  In addition, users will be able to see other details of the event including:
+Admins want to publicize an event that is occurring in the future.  After they define the event, users will see the event details and have the ability to respond whether they will attend.  In addition, users will be able to see other details of the event including:
 - event title
 - event description
 - event date
