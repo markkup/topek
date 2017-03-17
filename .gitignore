@@ -62,4 +62,4 @@ fastlane/screenshots
 *.dSYM.zip
 
 # local node_modules
-react-native-fieldsX
+js/react-native-fieldsX
