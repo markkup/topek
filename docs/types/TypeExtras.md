@@ -1,4 +1,4 @@
-TypeDetails
+Type Extras
 ===========
 
 These are things that can be added to a topic to customize it.
