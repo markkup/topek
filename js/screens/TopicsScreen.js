@@ -18,6 +18,7 @@ class Props extends PropMap {
     props.loadTopics = this.bindEvent(TopicActions.load);
     props.refreshTopics = this.bindEvent(TopicActions.load);
     props.topicSelect = this.bindEvent(TopicActions.setSelected);
+    props.startNewTopic = this.bindEvent(TopicActions.startNewTopic);
   }
 }
 
@@ -55,7 +56,7 @@ export default class TopicsScreen extends Component {
     return (
       <View style={Styles.screen}>
         <Header title="Topics" subtitle="MOST RECENT">
-          <TouchableOpacity onPress={() => navigate("TopicAddStack")} style={{marginRight: 10,marginBottom:0}}>
+          <TouchableOpacity onPress={() => this._addNewTopic()} style={{marginRight: 10,marginBottom:0}}>
             <IonIcon name="ios-add" size={40} color={"#fff"} />
           </TouchableOpacity>
         </Header>
@@ -75,6 +76,12 @@ export default class TopicsScreen extends Component {
         />
       </View>
     )
+  }
+
+  async _addNewTopic() {
+    const {navigate} = this.props.navigation;
+    await this.props.startNewTopic();
+    navigate("TopicAddStack");
   }
 
   _renderRow(topic, sectionID, rowID, highlightRow) {

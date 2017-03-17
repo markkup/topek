@@ -17,9 +17,11 @@ import MessagingScreen from "../screens/MessagingScreen"
 
 import MemberSelectorScreen from "../screens/MemberSelectorScreen"
 
+import ChooseLocationScreen from "../screens/ChooseLocationScreen"
 import TestScreen from "../screens/TestScreen"
 
 const modalOptions = {
+  //initialRouteName: "TopicAddTypeDetails",
   headerMode: "float",
   navigationOptions: {
     header: {
@@ -39,6 +41,7 @@ export const TopicAddStack = StackNavigator({
   TopicAddTypeDetails: { screen: TopicAddTypeDetailsScreen },
   TopicAddMembers: { screen: TopicAddMembersScreen },
   TopicAddConfirm: { screen: TopicAddConfirmScreen },
+  ChooseLocation: { screen: ChooseLocationScreen },
 }, modalOptions);
 
 export const SettingsStack = StackNavigator({

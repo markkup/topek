@@ -4,6 +4,7 @@ import { ToolbarTextButton, ErrorHeader, UserSelectListView } from "../component
 import { Form, InputField, Field, FieldGroup, TouchableField } from "../react-native-fieldsX"
 import { connectprops, PropMap } from "react-redux-propmap"
 import { TopicActions } from "../state/actions"
+import { UserMap } from "../models"
 import Styles, { Color, Dims } from "../styles"
 
 class Props extends PropMap {
@@ -12,7 +13,7 @@ class Props extends PropMap {
     props.orgOwner = this.state.prefs.org.owner;
     props.currentUser = this.state.profile.user;
     props.updateError = this.state.topics.updateError;
-    props.saveClick = this.bindEvent(TopicActions.add);
+    props.updateMembers = this.bindEvent(TopicActions.updateMembersInNewTopic);
   }
 }
 
@@ -30,11 +31,12 @@ export default class TopicAddMembersScreen extends Component {
 
   constructor(props){
     super(props);
+    this.members = new UserMap();
   }
 
   componentDidMount() {
     this.props.navigation.setParams({
-        rightClick: () => this.props.navigation.navigate("TopicAddConfirm")
+        rightClick: () => this._save()
     });
   }
 
@@ -61,14 +63,13 @@ export default class TopicAddMembersScreen extends Component {
   }
 
   _onMembersChanged(members) {
-    console.log(members);
+    this.members = members;
   }
 
-  async _saveType() {
+  async _save() {
     const { navigate } = this.props.navigation;
-    //if (await this.props.saveClick(this.state.title))
-    //  this.props.navigation.goBack(null);
-    navigate("TopicAddTypeDetails")
+    await this.props.updateMembers(this.members)
+    this.props.navigation.navigate("TopicAddConfirm")
   }
 }
 

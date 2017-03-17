@@ -118,3 +118,54 @@ export function removeMembersfromSelectedTopic(member) {
     return false;
   }
 }
+
+export function startNewTopic() {
+  return async (dispatch, getState) => {
+    dispatch({type: Types.TOPICS_NEW_TOPIC_START});
+  }
+}
+
+export function cancelNewTopic() {
+  return async (dispatch, getState) => {
+    dispatch({type: Types.TOPICS_NEW_TOPIC_RESET});
+  }
+}
+
+export function saveNewTopic() {
+  return async (dispatch, getState) => {
+    dispatch({type: Types.TOPICS_UPDATE_REQUEST});
+
+    try {
+
+      const state = getState();
+      if (!state.topics.newTopic)
+        throw "No new topic has been created"
+      const newTopic = state.topics.newTopic;
+      const newTopicMembers = state.topics.newTopicMembers;
+
+      if (!state.prefs.org)
+        throw "No current org set"
+
+      var results = await topicService.add(state.prefs.org.id, newTopic, newTopicMembers);
+      dispatch({type: Types.TOPICS_ADD_SUCCESS, payload: results});
+      dispatch({type: Types.TOPICS_NEW_TOPIC_RESET});
+      return true;
+    }
+    catch (e) {
+      dispatch({type: Types.TOPICS_UPDATE_FAILURE, payload: Error.fromException(e)});
+    }
+    return false;
+  }
+}
+
+export function updateNewTopic(prop, value) {
+  return async (dispatch, getState) => {
+    dispatch({type: Types.TOPICS_NEW_TOPIC_UPDATE, payload: {prop: prop, value: value}});
+  }
+}
+
+export function updateMembersInNewTopic(members) {
+  return async (dispatch, getState) => {
+    dispatch({type: Types.TOPICS_NEW_TOPIC_UPDATE_MEMBERS, payload: members});
+  }
+}

@@ -11,7 +11,8 @@ class Props extends PropMap {
     props.isUpdating = this.state.topics.isUpdating;
     props.updateError = this.state.topics.updateError;
     props.dismissModal = this.bindEvent(NavActions.dismissModal);
-    props.saveClick = this.bindEvent(TopicActions.add);
+    props.updateNewTopic = this.bindEvent(TopicActions.updateNewTopic);
+    props.saveNewTopic = this.bindEvent(TopicActions.saveNewTopic);
   }
 }
 
@@ -30,7 +31,6 @@ export default class TopicAddConfirmScreen extends Component {
   constructor(props){
     super(props);
     this.state = {
-      title: ""
     }
   }
 
@@ -62,8 +62,7 @@ export default class TopicAddConfirmScreen extends Component {
   }
 
   async _save() {
-    //if (await this.props.saveClick(this.state.title))
-    //  this.props.navigation.goBack(null);
+    await this.props.saveNewTopic();
     this.props.dismissModal("TopicAddStack")
   }
 }

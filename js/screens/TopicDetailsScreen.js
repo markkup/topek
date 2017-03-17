@@ -76,7 +76,7 @@ export default class TopicDetailsScreen extends Component {
             <View style={styles.contentContainerStyle}>
 
               {topic.description &&
-              <DescriptionField text={"The refresh button causes the Dashboard to refresh. The button spins to show it's refreshing. This next line should put us over 3 lines."} />}
+              <DescriptionField text={topic.description} />}
 
 
               {this._renderDetails()}

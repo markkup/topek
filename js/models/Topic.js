@@ -6,6 +6,7 @@ const TopicRecord = Immutable.Record({
   createdAt: null,
   updatedAt: null,
   name: "",
+  description: "",
   owner: new User(),
   details: new Immutable.List()
 })
@@ -17,6 +18,7 @@ export default class Topic extends TopicRecord {
       .set("createdAt", topic.createdAt)
       .set("updatedAt", topic.updatedAt)
       .set("name", topic.get("name"))
+      .set("description", topic.get("description"))
       .set("details", topic.get("details"))
     if (topic.get("owner")) {
       res = res.set("owner", User.fromParse(topic.get("owner")))

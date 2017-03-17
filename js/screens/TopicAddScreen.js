@@ -11,7 +11,7 @@ class Props extends PropMap {
   map(props) {
     props.isUpdating = this.state.topics.isUpdating;
     props.updateError = this.state.topics.updateError;
-    props.saveClick = this.bindEvent(TopicActions.add);
+    props.updateNewTopic = this.bindEvent(TopicActions.updateNewTopic);
   }
 }
 
@@ -31,7 +31,8 @@ export default class TopicAddScreen extends Component {
   constructor(props){
     super(props);
     this.state = {
-      title: ""
+      title: "",
+      description: ""
     }
   }
 
@@ -86,14 +87,17 @@ export default class TopicAddScreen extends Component {
 
   _handleFormChange(data) {
     this.setState({
-      title: data.title
+      title: data.title,
+      description: data.description
     })
     this.props.navigation.setParams({valid: Validate.isNotEmpty(data.title)});
   }
 
   async _next() {
-    //if (await this.props.saveClick(this.state.title))
-    //  this.props.navigation.goBack(null);
+    await this.props.updateNewTopic("name", this.state.title);
+    await this.props.updateNewTopic("description", this.state.description);
+
+    Keyboard.dismiss()
     this.props.navigation.navigate("TopicAddType")
   }
 

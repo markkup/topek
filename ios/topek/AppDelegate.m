@@ -18,6 +18,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  
+  /*NSString *kAPIKey = @"AIzaSyCrCTR44_3NpgADNlK7kggoMkeMv8_3WxY";
+  [GMSPlacesClient provideAPIKey:kAPIKey];
+  [GMSServices provideAPIKey:kAPIKey];*/
+  
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];

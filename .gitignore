@@ -30,6 +30,10 @@ build/
 local.properties
 *.iml
 
+# ios/Pods
+#
+ios/Pods/
+
 # node.js
 #
 node_modules/
@@ -56,3 +60,6 @@ fastlane/screenshots
 *.mobileprovision
 *.cer
 *.dSYM.zip
+
+# local node_modules
+react-native-fieldsX

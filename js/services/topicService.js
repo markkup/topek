@@ -55,7 +55,7 @@ class TopicService {
     }
   }
 
-  async add(orgId, title) {
+  async add(orgId, topic, topicMembers) {
 
     await InteractionManager.runAfterInteractions();
 
@@ -66,11 +66,12 @@ class TopicService {
       let org = new ParseOrg();
       org.id = orgId;
 
-      let topic = new ParseTopic();
-      topic.set("name", title);
-      topic.set("owner", me);
-      topic.set("org", org);
-      topic.set("details", [
+      let t = new ParseTopic();
+      t.set("name", topic.name);
+      t.set("owner", me);
+      t.set("org", org);
+      t.set("description", topic.description);
+      t.set("details", [
         {
           type: "event",
           order: 1,
@@ -83,8 +84,14 @@ class TopicService {
           title: "Please bring necessary documentation"
         }
       ])
+      var memberRelation = t.relation("members");
+      topicMembers.map(m => {
+        let u = new ParseUser();
+        u.id = m.id;
+        memberRelation.add(u);
+      })
 
-      const result = await topic.save();
+      const result = await t.save();
       return Topic.fromParse(result);
     }
     catch (e) {

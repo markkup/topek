@@ -8,6 +8,8 @@ const TopicState = Immutable.Record({
   list: new TopicMap(),
   selectedTopic: null,
   selectedTopicMembers: new UserMap(),
+  newTopic: null,
+  newTopicMembers: new UserMap(),
   isLoadingMembers: false,
   isRefreshing: false,
   isUpdating: false,
@@ -132,6 +134,30 @@ export default function(state = initialState, action = {}) {
       const members = action.payload;
       state = state.set("selectedTopicMembers", members)
         .set("isLoadingMembers", false)
+      return state;
+    }
+
+    case Types.TOPICS_NEW_TOPIC_START: {
+      state = state.set("newTopic", new Topic())
+        .set("newTopicMembers", new UserMap())
+      return state;
+    }
+
+    case Types.TOPICS_NEW_TOPIC_RESET: {
+      state = state.set("newTopic", null)
+        .set("newTopicMembers", new UserMap())
+      return state;
+    }
+
+    case Types.TOPICS_NEW_TOPIC_UPDATE: {
+      const { prop, value } = action.payload;
+      state = state.setIn(["newTopic", prop], value)
+      return state;
+    }
+
+    case Types.TOPICS_NEW_TOPIC_UPDATE_MEMBERS: {
+      const members = action.payload;
+      state = state.set("newTopicMembers", members)
       return state;
     }
 
