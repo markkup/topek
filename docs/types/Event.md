@@ -8,9 +8,9 @@ User Scenarios
 3. Admin wants to provide an early reminder (Alert) for the event.
 4. Admin can optionally show who's attending in the topic.
 5. Admin can provide a name and location for the event.
-6. Admin can attach a document(s)
-7. Admins can specify whether or not "Favorite Pics from Event" are able to be added to the event (maybe?)
-8. Admins can specify whether or not chat is available for this event
+6. Admins can specify whether or not "Favorite Pics from Event" are able to be added to the event (maybe?)
+7. Admins can specify whether or not chat is available for this event
+8. Type Extras are available for events.
 
 Description
 -----------
