@@ -17,7 +17,7 @@ User Scenarios
 
 Description
 -----------
-Admins will be able to distribute a document or copy text and solicit comments or require approval.  The
+Admins will be able to distribute a document or copy text and solicit comments or require approval.  This process will include a limited approval/review path and will contain limited ability to control the workflow.  Basic tools will be provided allow the Admin to setup the document/copy text, be able to define the recipients, and be able to define the workflow process.
 
 Limitations
 -----------
