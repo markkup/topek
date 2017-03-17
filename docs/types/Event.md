@@ -15,8 +15,7 @@ User Scenarios
 10. Users need to be able to view the event details.
 11. Users need to be able to respond whether they will be attending the event.
 12. Users want to add the event to their calendar - either after they indicate they are attending or manually by clicking a button.
-13. Users want to be able to get quick directions for the event.
-14.
+13. Users want to be able to get quick directions for the event - and launch their mapping program.
 
 Description
 -----------
@@ -26,8 +25,6 @@ Admins want to publicize an event that is occurring in the future.  After they d
 - event date
 - event start time/(optional) end time
 - event location name and coordinates
-
-Users will see the events listed on their Topic Feed.  Events will include an identifiable "Event" icon next to the event name.  When users select the event, they will see the event details.  They will see three choices of whether they are attending - Yes, No, Maybe.  They will be able to change this selection in some way.  They will also be able to add the event to their device calendar.  If they select the map/location, it will launch their device's mapping program.
 
 Limitations
 -----------
