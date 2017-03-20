@@ -9,6 +9,10 @@ import ActionSheet from "react-native-actionsheet"
 import { TopicActions } from "../state/actions"
 import Styles, { Color, Dims } from "../styles"
 
+// event
+import Datetime from "../lib/datetime"
+import MapView from "react-native-maps"
+
 class Props extends PropMap {
   map(props) {
     props.topic = this.state.topics.selectedTopic;
@@ -77,7 +81,6 @@ export default class TopicDetailsScreen extends Component {
 
               {topic.description &&
               <DescriptionField text={topic.description} />}
-
 
               {this._renderDetails()}
               {this._renderMembers()}
@@ -190,24 +193,96 @@ export default class TopicDetailsScreen extends Component {
   }
 
   _renderDetails() {
-    const { navigate } = this.props.navigation;
+    const { topic } = this.props;
+
+    if (topic.details.type == "event") {
+      return this._renderEvent();
+    }
 
     let children = [];
-    const topic = this.props.topic;
     if (topic.details) {
       topic.details.map((detail, i) => {
-        children.push(<Field key={detail.type + i} text={detail.title} />)
+        if (detail.type == "event") {
+          children.push(this._renderEvent(detail))
+        }
+        else {
+          children.push(<Field key={detail.type + i} text={detail.title} />)
+        }
       });
     }
 
-    if (!this.isOwner && children.length == 0)
+    if (children.length == 0)
       return null;
 
     return (
-      <FieldGroup title="Details">
+      <View>
         {children}
-        { this.isOwner && children.length == 0 ? <Field key={-1} text=" " /> : null }
-      </FieldGroup>
+      </View>
+    )
+  }
+
+  _renderEvent(detail) {
+    let start = Datetime(detail.startDate);
+    let end = Datetime(detail.endDate);
+    let when = "";
+    if (detail.allDay == true) {
+      when = "All-Day: "
+      if (start.isSame(end, "day"))
+        when += start.format("LL")
+      else
+        when += start.format("LL") + " to " + end.format("LL")
+    }
+    else {
+      if (start.isSame(end, "day"))
+        when += start.format("LLL") + " to " + end.format("h:mm A")
+      else
+        when += start.format("LLL") + " to " + end.format("LLL")
+    }
+
+    let where = null;
+    if (detail.location) {
+      where = (
+        <FieldGroup title="Where">
+          <Field text={detail.location.name} />
+          <DescriptionField text={detail.location.address} />
+          <Field style={styles.mapContainer}>
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: detail.location.geo.lat,
+                longitude: detail.location.geo.lng,
+                latitudeDelta: detail.location.viewport.lat,
+                longitudeDelta: detail.location.viewport.lng,
+              }}
+            >
+              <MapView.Marker
+                coordinate={{
+                  latitude: detail.location.geo.lat,
+                  longitude: detail.location.geo.lng
+                  }}
+                title={detail.location.name}
+                description={detail.location.address}
+              />
+            </MapView>
+          </Field>
+        </FieldGroup>
+      )
+    }
+    else if (detail.locationName != "") {
+      where = (
+        <FieldGroup title="Where">
+          <Field text={detail.locationName} />
+        </FieldGroup>
+      )
+    }
+
+    return (
+      <View>
+        <FieldGroup title="When">
+          <Field text={when} />
+        </FieldGroup>
+        {where}
+      </View>
     )
   }
 
@@ -296,5 +371,19 @@ let styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "600",
     color: Color.white
+  },
+
+
+
+  // event
+  mapContainer: {
+    height: 130
+  },
+  map: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 130,
   }
 })

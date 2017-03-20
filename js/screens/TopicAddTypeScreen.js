@@ -41,7 +41,7 @@ export default class TopicAddScreen extends Component {
           ref="form">
         
           <FieldGroup>
-            <TouchableField text="Announcement" icon="flag" accessory={true} onPress={() => this._saveType()} />
+            {/*<TouchableField text="Announcement" icon="flag" accessory={true} onPress={() => this._saveType()} />*/}
             <TouchableField text="Event" icon="calendar" accessory={true} onPress={() => this._saveType()} />
           </FieldGroup>
 

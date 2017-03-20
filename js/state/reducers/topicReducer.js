@@ -151,7 +151,12 @@ export default function(state = initialState, action = {}) {
 
     case Types.TOPICS_NEW_TOPIC_UPDATE: {
       const { prop, value } = action.payload;
-      state = state.setIn(["newTopic", prop], value)
+      if (prop != "details") {
+        state = state.setIn(["newTopic", prop], value)
+      }
+      else {
+        state = state.setIn(["newTopic", "details"], Immutable.List([value]))
+      }
       return state;
     }
 

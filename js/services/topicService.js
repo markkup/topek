@@ -71,19 +71,7 @@ class TopicService {
       t.set("owner", me);
       t.set("org", org);
       t.set("description", topic.description);
-      t.set("details", [
-        {
-          type: "event",
-          order: 1,
-          dateStart: new Date(2017, 3, 15, 3, 43, 0),
-          title: "Event starting 3/15/2017"
-        },
-        {
-          type: "info",
-          order: 2,
-          title: "Please bring necessary documentation"
-        }
-      ])
+      t.set("details", topic.details)
       var memberRelation = t.relation("members");
       topicMembers.map(m => {
         let u = new ParseUser();

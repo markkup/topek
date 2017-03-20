@@ -18,6 +18,7 @@ import MessagingScreen from "../screens/MessagingScreen"
 import MemberSelectorScreen from "../screens/MemberSelectorScreen"
 
 import ChooseLocationScreen from "../screens/ChooseLocationScreen"
+import ChooseReminderScreen from "../screens/ChooseReminderScreen"
 import TestScreen from "../screens/TestScreen"
 
 const modalOptions = {
@@ -42,6 +43,7 @@ export const TopicAddStack = StackNavigator({
   TopicAddMembers: { screen: TopicAddMembersScreen },
   TopicAddConfirm: { screen: TopicAddConfirmScreen },
   ChooseLocation: { screen: ChooseLocationScreen },
+  ChooseReminder: { screen: ChooseReminderScreen },
 }, modalOptions);
 
 export const SettingsStack = StackNavigator({

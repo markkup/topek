@@ -1,33 +1,17 @@
 import React, { Component } from "react"
 import { StyleSheet, View, Text, Button } from "react-native"
 import { ToolbarTextButton } from "../components"
-import { connectprops, PropMap } from "react-redux-propmap"
 import { Field, FieldGroup, TouchableField } from "react-native-fields"
 import Styles, { Color, Dims, TextSize } from "../styles"
-
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 
-class Props extends PropMap {
-  map(props) {
-    props.user = this.state.profile.user;
-  }
-}
-
-@connectprops(Props)
 export default class ChooseLocationScreen extends Component {
 
   static navigationOptions = {
-    title: "Choose Location",
+    title: "Location",
     header: ({ state, goBack }, defaultHeader) => ({
-      ...defaultHeader,
-      right: <ToolbarTextButton title="Save" active={true} onPress={() => state.params.rightClick()} />,
+      ...defaultHeader
     })
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({
-        rightClick: () => this._save()
-    });
   }
 
   render() {
@@ -40,13 +24,16 @@ export default class ChooseLocationScreen extends Component {
         <GooglePlacesAutocomplete
         placeholder='Search'
         minLength={2} // minimum length of text to search
-        autoFocus={false}
+        autoFocus={true}
         listViewDisplayed='auto'    // true/false/undefined
         fetchDetails={true}
+        renderRow={this._renderRow.bind(this)}
         renderDescription={(row) => row.description} // custom description render
         onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
           console.log(data);
           console.log(details);
+
+          this.props.navigation.state.params.onComplete(details);
         }}
         getDefaultValue={() => {
           return ''; // text input default value
@@ -58,8 +45,16 @@ export default class ChooseLocationScreen extends Component {
           types: '', // default: 'geocode'
         }}
         styles={{
+          row: {
+            flexDirection: "column",
+            height: 65
+          },
+          specialItemRow: {
+            height: 35
+          },
           description: {
-            fontSize: TextSize.normal
+            fontSize: TextSize.normal,
+            paddingVertical: 0
           },
           predefinedPlacesDescription: {
 
@@ -72,7 +67,7 @@ export default class ChooseLocationScreen extends Component {
           }
         }}
 
-        currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+        currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
         currentLocationLabel="Current location"
         nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
         GoogleReverseGeocodingQuery={{
@@ -87,7 +82,7 @@ export default class ChooseLocationScreen extends Component {
 
         filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
 
-        predefinedPlaces={[homePlace, workPlace]}
+        //predefinedPlaces={[homePlace, workPlace]}
 
         debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 200ms.
       />
@@ -95,11 +90,44 @@ export default class ChooseLocationScreen extends Component {
     )
   }
 
-  _save() {
-    const { goBack } = this.props.navigation;
-    goBack(null);
+  _renderRow(rowData) {
+    
+    if (rowData.structured_formatting && rowData.structured_formatting.main_text) {
+      let mainText = rowData.structured_formatting.main_text;
+      let subText = rowData.structured_formatting.secondary_text;
+      return (
+        <View>
+          <Text style={styles.rowMainText}>{mainText}</Text>
+          <Text style={styles.rowSubText}>{subText}</Text>
+        </View>
+      )
+    }
+
+    let text = rowData.description || rowData.formatted_address || rowData.name;
+    return (
+      <Text style={styles.rowText}>{text}</Text>
+    )
   }
 }
 
 let styles = StyleSheet.create({
+  row: {
+
+  },
+  rowDetailed: {
+    flexDirection: "column",
+    height: 65
+  },
+  rowMainText: {
+    fontSize: TextSize.normal,
+    color: "#000"
+  },
+  rowSubText: {
+    fontSize: TextSize.small,
+    color: "#666"
+  },
+  rowText: {
+    fontSize: TextSize.normal,
+    color: "#000"
+  }
 })
