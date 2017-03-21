@@ -12,7 +12,16 @@ An admin will be able to create a meeting response request which will include a 
 
 Requirements
 ------------
-1. Admin needs to be an
+1. Admin should be able to create a MeetingDateRequest topic.
+2. Admin should be able to invite one or more members.
+3. Admin should be able to choose dates (with no time) to choose from.
+4. Admin should be able to choose dates with times to choose from.
+5. Users should be able to view the meeting request topic details including the seleciton of dates/times.
+6. Users should be able to select which dates and/or times are suitable for them.
+7. Users should be able to see other responses from other users if they are available.
+8. Users should be able to modify their selections by returning to the meeting request topic.
+9. Admins should be able to verify the final date and/or time and close the topic for changes.
+10. Users should be able to see the selected date and/or time.
 
 Limitations
 -----------
