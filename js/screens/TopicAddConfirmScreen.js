@@ -8,10 +8,10 @@ import Styles, { Color, Dims } from "../styles"
 
 class Props extends PropMap {
   map(props) {
-    props.isUpdating = this.state.topics.isUpdating;
+    props.newTopic = this.state.topics.newTopic;
+    props.newTopicMembers = this.state.topics.newTopicMembers;
     props.updateError = this.state.topics.updateError;
     props.dismissModal = this.bindEvent(NavActions.dismissModal);
-    props.updateNewTopic = this.bindEvent(TopicActions.updateNewTopic);
     props.saveNewTopic = this.bindEvent(TopicActions.saveNewTopic);
   }
 }
@@ -23,7 +23,7 @@ export default class TopicAddConfirmScreen extends Component {
     title: "Confirm",
     header: ({ state }, defaultHeader) => ({
       ...defaultHeader,
-      right: <ToolbarTextButton title="Save" active={true} onPress={() => state.params.rightClick()} />,
+      right: <ToolbarTextButton title="Save" active={true} working={state.params && state.params.working} onPress={() => state.params.rightClick()} />,
       backTitle: " "
     })
   }
@@ -36,12 +36,21 @@ export default class TopicAddConfirmScreen extends Component {
 
   componentDidMount() {
     this.props.navigation.setParams({
+      working: false,
       rightClick: () => this._save()
     });
   }
 
   render() {
     const { navigate, goBack } = this.props.navigation;
+    const { newTopic, newTopicMembers } = this.props;
+
+    let text = "";
+    if (newTopic) {
+      text = "Adding a new " + newTopic.details.first().type.toUpperCase() + " topic titled '" + newTopic.name + "'. ";
+      text += "The new topic is assigned to " + newTopicMembers.size + " member(s).";
+    }
+
     return (
       <View style={Styles.screenFields}>
 
@@ -53,6 +62,8 @@ export default class TopicAddConfirmScreen extends Component {
         
           <FieldGroup>
             
+            <Field text={text} />
+
           </FieldGroup>
 
         </Form>
@@ -62,6 +73,7 @@ export default class TopicAddConfirmScreen extends Component {
   }
 
   async _save() {
+    this.props.navigation.setParams({working: true});
     await this.props.saveNewTopic();
     this.props.dismissModal("TopicAddStack")
   }

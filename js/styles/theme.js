@@ -26,10 +26,10 @@ const Dims = {
 }
 
 const TextSize = {
-    tiny: 14,
-    small: 16,
+    tiny: Platform.OS === "ios" ? 14 : 12,
+    small: Platform.OS === "ios" ? 16 : 14,
     normal: Platform.OS === "ios" ? 18 : 16,
-    large: 18
+    large: Platform.OS === "ios" ? 22 : 20,
 }
 
 export { Color, Dims, TextSize }

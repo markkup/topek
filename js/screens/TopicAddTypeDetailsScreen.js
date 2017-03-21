@@ -122,6 +122,10 @@ export default class TopicAddTypeDetailsScreen extends Component {
           <Field style={styles.mapContainer}>
             <MapView
               style={styles.map}
+              scrollEnabled={false}
+              zoomEnabled={false}
+              rotateEnabled={false}
+              pitchEnabled={false}
               initialRegion={{
                 latitude: this.state.location.geo.lat,
                 longitude: this.state.location.geo.lng,

@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { StyleSheet, View, Text, Button, StatusBar, TouchableHighlight, Keyboard } from "react-native"
-import { ToolbarTextButton, ErrorHeader, FieldButton } from "../components"
+import { ToolbarTextButton, ToolbarButton, ErrorHeader, FieldButton } from "../components"
 import { Form, InputField, Field, FieldGroup, TouchableField } from "../react-native-fieldsX"
 import { connectprops, PropMap } from "react-redux-propmap"
 import { TopicActions } from "../state/actions"
@@ -22,7 +22,7 @@ export default class TopicAddScreen extends Component {
     title: "New Topic",
     header: ({state}, defaultHeader) => ({
       ...defaultHeader,
-      left: <ToolbarTextButton title="Cancel" onPress={() => state.params.leftClick()} />,
+      left: <ToolbarButton name="close" onPress={() => state.params.leftClick()} />,
       right: <ToolbarTextButton title="Next" active={true} disabled={!state.params || !state.params.valid} onPress={() => state.params.rightClick()} />,
       backTitle: " "
     })

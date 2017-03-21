@@ -29,8 +29,7 @@ export default class TopicsScreen extends Component {
     title: "Topics",
     header: (navigation, defaultHeader) => ({
       ...defaultHeader,
-      visible: false,
-      backTitle: " "
+      visible: false
     })
   }
 

@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { StyleSheet, View, Text, Button, StatusBar, TouchableHighlight } from "react-native"
 import { ToolbarTextButton, ErrorHeader, FieldButton } from "../components"
-import { Form, InputField, Field, FieldGroup, TouchableField } from "../react-native-fieldsX"
+import { Form, SelectField, Field, FieldGroup, TouchableField } from "../react-native-fieldsX"
 import { connectprops, PropMap } from "react-redux-propmap"
 import { TopicActions } from "../state/actions"
 import Styles, { Color, Dims } from "../styles"
@@ -42,7 +42,7 @@ export default class TopicAddScreen extends Component {
         
           <FieldGroup>
             {/*<TouchableField text="Announcement" icon="flag" accessory={true} onPress={() => this._saveType()} />*/}
-            <TouchableField text="Event" icon="calendar" accessory={true} onPress={() => this._saveType()} />
+            <SelectField text="Event" icon="calendar" accessory={true} onPress={() => this._saveType()} />
           </FieldGroup>
 
         </Form>

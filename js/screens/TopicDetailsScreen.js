@@ -203,7 +203,7 @@ export default class TopicDetailsScreen extends Component {
     if (topic.details) {
       topic.details.map((detail, i) => {
         if (detail.type == "event") {
-          children.push(this._renderEvent(detail))
+          children.push(this._renderEvent(detail, detail.type + i))
         }
         else {
           children.push(<Field key={detail.type + i} text={detail.title} />)
@@ -221,7 +221,7 @@ export default class TopicDetailsScreen extends Component {
     )
   }
 
-  _renderEvent(detail) {
+  _renderEvent(detail, key) {
     let start = Datetime(detail.startDate);
     let end = Datetime(detail.endDate);
     let when = "";
@@ -242,12 +242,16 @@ export default class TopicDetailsScreen extends Component {
     let where = null;
     if (detail.location) {
       where = (
-        <FieldGroup title="Where">
+        <FieldGroup title="Where" key={key}>
           <Field text={detail.location.name} />
           <DescriptionField text={detail.location.address} />
           <Field style={styles.mapContainer}>
             <MapView
               style={styles.map}
+              scrollEnabled={false}
+              zoomEnabled={false}
+              rotateEnabled={false}
+              pitchEnabled={false}
               initialRegion={{
                 latitude: detail.location.geo.lat,
                 longitude: detail.location.geo.lng,
@@ -270,14 +274,14 @@ export default class TopicDetailsScreen extends Component {
     }
     else if (detail.locationName != "") {
       where = (
-        <FieldGroup title="Where">
+        <FieldGroup title="Where" key={key}>
           <Field text={detail.locationName} />
         </FieldGroup>
       )
     }
 
     return (
-      <View>
+      <View key={key}>
         <FieldGroup title="When">
           <Field text={when} />
         </FieldGroup>
