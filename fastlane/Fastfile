@@ -32,7 +32,7 @@ platform :ios do
     sigh(adhoc: true)
     gym(scheme: "topek",
       clean: true,
-      project: "./ios/topek.xcodeproj",
+      workspace: "./ios/topek.xcworkspace",
       configuration: "ReleaseAdhoc")
     hockey(api_token: "59e931660b6041908f0a6d160282439d")
     slack(message: "Successfully deployed new ios beta app to HockeyApp.")

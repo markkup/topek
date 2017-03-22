@@ -10,7 +10,7 @@ export function initialize() {
 
     const state = getState();
     let org = state.prefs.org;
-    if ((!org || !org.id) && state.orgs.list.size > 0) {
+    if ((!org || !org.id) && (state.orgs.list && state.orgs.list.size > 0)) {
       org = state.orgs.list.first()
     }
     await dispatch(prefsActions.setOrg(org));

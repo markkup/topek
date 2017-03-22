@@ -3386,6 +3386,10 @@ react-native-google-places-autocomplete@^1.2.8:
   dependencies:
     qs "^5.2.0"
 
+react-native-image-crop-picker@^0.12.8:
+  version "0.12.8"
+  resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.12.8.tgz#e4821f3985198275ce4c5f399625d631521c5c9b"
+
 react-native-invertible-scroll-view@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-invertible-scroll-view/-/react-native-invertible-scroll-view-1.0.0.tgz#60ceb384dc950c34eba3a5aeda39f97cdc7d4e23"

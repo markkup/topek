@@ -1,4 +1,5 @@
 import Immutable from "immutable"
+import Image from "./Image"
 
 const UserRecord = Immutable.Record({
   id: null,
@@ -17,6 +18,8 @@ const UserRecord = Immutable.Record({
 
 export default class User extends UserRecord {
   static fromParse(user) {
+    if (!user)
+      return null;
     let res = new User()
       .set("id", user.id)
       .set("createdAt", user.createdAt)
@@ -24,13 +27,8 @@ export default class User extends UserRecord {
       .set("email", user.get("email"))
       .set("username", user.get("username"))
       .set("name", user.get("name"))
-      .set("alias", user.get("alias"));
-    if (user.get("avatar")) {
-      res = res
-        .setIn(["avatar", "name"], user.get("avatar").name())
-        .setIn(["avatar", "url"], user.get("avatar").url())
-        .setIn(["avatar", "valid"], true)
-    }
+      .set("alias", user.get("alias"))
+      .set("avatar", Image.fromParse(user.get("avatar")))
     return res;
   }
 }

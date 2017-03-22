@@ -66,12 +66,19 @@ class TopicService {
       let org = new ParseOrg();
       org.id = orgId;
 
+      let image = null;
+      if (topic.image.valid) {
+        image = new Parse.File("topic-image.png", { base64: topic.image.url });
+        await image.save();
+      }
+
       let t = new ParseTopic();
       t.set("name", topic.name);
       t.set("owner", me);
       t.set("org", org);
       t.set("description", topic.description);
       t.set("details", topic.details)
+      t.set("image", image);
       var memberRelation = t.relation("members");
       topicMembers.map(m => {
         let u = new ParseUser();

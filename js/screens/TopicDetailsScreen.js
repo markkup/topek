@@ -1,13 +1,14 @@
 
 import React, { Component } from "react"
-import { StyleSheet, View, Text, Button, Animated, ActivityIndicator } from "react-native"
+import { StyleSheet, View, Text, Button, Animated, ActivityIndicator, Image } from "react-native"
 import { ToolbarButton, AvatarImage, ErrorHeader, WorkingOverlay } from "../components"
 import { connectprops, PropMap } from "react-redux-propmap"
 import { Field, FieldGroup, TouchableField, DescriptionField } from "react-native-fields"
 import Layout from "../lib/Layout"
-import ActionSheet from "react-native-actionsheet"
 import { TopicActions } from "../state/actions"
 import Styles, { Color, Dims } from "../styles"
+
+import ActionSheet from "react-native-actionsheet"
 
 // event
 import Datetime from "../lib/datetime"
@@ -151,6 +152,11 @@ export default class TopicDetailsScreen extends Component {
       outputRange: [-3, 0, -11],
     });
 
+    let image = null;
+    if (topic.image && topic.image.valid) {
+      image = (<Image style={styles.image} source={{uri: topic.image.url}} />)
+    }
+
     return (
       <View>
         <Animated.View 
@@ -160,10 +166,13 @@ export default class TopicDetailsScreen extends Component {
           style={[styles.header]}>
           <Animated.View 
             style={[styles.caption, {transform: [{translateY: bottomTranslateY}], opacity: infoOpacity}]}>
-            <Text style={styles.captionTitle}>{topic.name}</Text>
-            <View style={styles.ownerContainer}>
-              <AvatarImage user={topic.owner} size={25} style={styles.ownerAvatar} />
-              <Text style={styles.owner}>{topic.owner.alias}</Text>
+            {image}
+            <View style={styles.captionFrame}>
+              <Text style={styles.captionTitle}>{topic.name}</Text>
+              <View style={styles.ownerContainer}>
+                <AvatarImage user={topic.owner} size={25} style={styles.ownerAvatar} />
+                <Text style={styles.owner}>{topic.owner.alias}</Text>
+              </View>
             </View>
           </Animated.View>
         </Animated.View>
@@ -333,8 +342,18 @@ let styles = StyleSheet.create({
   contentContainerStyle: {
     paddingBottom: 20
   },
+  image: {
+    width: 100, 
+    height: 100, 
+    marginRight: 10, 
+    borderRadius: 4
+  },
   caption: {
+    flexDirection: "row",
     paddingHorizontal: Dims.horzPadding,
+  },
+  captionFrame: {
+    flex: 1
   },
   captionTitle: {
     color: "white",

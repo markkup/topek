@@ -1,5 +1,6 @@
 import Immutable from "immutable"
 import User from "./User"
+import Image from "./Image"
 
 const TopicRecord = Immutable.Record({
   id: null,
@@ -8,6 +9,7 @@ const TopicRecord = Immutable.Record({
   name: "",
   description: "",
   owner: new User(),
+  image: new Image(),
   details: new Immutable.List()
 })
 
@@ -20,9 +22,8 @@ export default class Topic extends TopicRecord {
       .set("name", topic.get("name"))
       .set("description", topic.get("description"))
       .set("details", topic.get("details"))
-    if (topic.get("owner")) {
-      res = res.set("owner", User.fromParse(topic.get("owner")))
-    }
+      .set("image", Image.fromParse(topic.get("image")))
+      .set("owner", User.fromParse(topic.get("owner")))
     return res;
   }
 }

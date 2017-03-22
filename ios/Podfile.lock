@@ -1,0 +1,63 @@
+PODS:
+  - QBImagePickerController (3.4.0)
+  - React/Core (0.42.0):
+    - React/cxxreact
+    - Yoga (= 0.42.0.React)
+  - React/cxxreact (0.42.0):
+    - React/jschelpers
+  - React/jschelpers (0.42.0)
+  - React/RCTActionSheet (0.42.0):
+    - React/Core
+  - React/RCTAnimation (0.42.0):
+    - React/Core
+  - React/RCTGeolocation (0.42.0):
+    - React/Core
+  - React/RCTImage (0.42.0):
+    - React/Core
+    - React/RCTNetwork
+  - React/RCTLinkingIOS (0.42.0):
+    - React/Core
+  - React/RCTNetwork (0.42.0):
+    - React/Core
+  - React/RCTSettings (0.42.0):
+    - React/Core
+  - React/RCTText (0.42.0):
+    - React/Core
+  - React/RCTVibration (0.42.0):
+    - React/Core
+  - React/RCTWebSocket (0.42.0):
+    - React/Core
+  - RSKImageCropper (1.6.0)
+  - Yoga (0.42.0.React)
+
+DEPENDENCIES:
+  - QBImagePickerController
+  - React/Core (from `../node_modules/react-native`)
+  - React/RCTActionSheet (from `../node_modules/react-native`)
+  - React/RCTAnimation (from `../node_modules/react-native`)
+  - React/RCTGeolocation (from `../node_modules/react-native`)
+  - React/RCTImage (from `../node_modules/react-native`)
+  - React/RCTLinkingIOS (from `../node_modules/react-native`)
+  - React/RCTNetwork (from `../node_modules/react-native`)
+  - React/RCTSettings (from `../node_modules/react-native`)
+  - React/RCTText (from `../node_modules/react-native`)
+  - React/RCTVibration (from `../node_modules/react-native`)
+  - React/RCTWebSocket (from `../node_modules/react-native`)
+  - RSKImageCropper
+  - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
+
+EXTERNAL SOURCES:
+  React:
+    :path: ../node_modules/react-native
+  Yoga:
+    :path: ../node_modules/react-native/ReactCommon/yoga
+
+SPEC CHECKSUMS:
+  QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
+  React: 8ec97f0d79ba31892c526cf56425937926cc9b48
+  RSKImageCropper: 6903235c7a8a79acb1e1f3490e2c911b858f8208
+  Yoga: 4183cc70cae189d73f996b1e40c3078aca9f96ef
+
+PODFILE CHECKSUM: 8cf82f58fd44874b7886e888533d382e4fb63414
+
+COCOAPODS: 1.2.0

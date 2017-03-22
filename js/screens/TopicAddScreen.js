@@ -1,14 +1,19 @@
 import React, { Component } from "react"
-import { StyleSheet, View, Text, Button, StatusBar, TouchableHighlight, Keyboard } from "react-native"
+import { StyleSheet, View, Text, Button, StatusBar, TouchableOpacity, Keyboard, Image } from "react-native"
 import { ToolbarTextButton, ToolbarButton, ErrorHeader, FieldButton } from "../components"
-import { Form, InputField, Field, FieldGroup, TouchableField } from "../react-native-fieldsX"
+import { Form, InputField, Field, FieldGroup, TouchableField, KeyboardAwareScrollView } from "../react-native-fieldsX"
 import { connectprops, PropMap } from "react-redux-propmap"
 import { TopicActions } from "../state/actions"
+import * as Models from "../models"
 import Validate from "../lib/validate"
 import Styles, { Color, Dims } from "../styles"
 
+import ActionSheet from "react-native-actionsheet"
+import ImagePicker from "react-native-image-crop-picker"
+
 class Props extends PropMap {
   map(props) {
+    props.newTopic = this.state.topics.newTopic;
     props.isUpdating = this.state.topics.isUpdating;
     props.updateError = this.state.topics.updateError;
     props.updateNewTopic = this.bindEvent(TopicActions.updateNewTopic);
@@ -47,9 +52,28 @@ export default class TopicAddScreen extends Component {
   }
 
   render() {
-    const { navigate, goBack } = this.props.navigation;
+    
+    let image = null;
+    if (this.props.newTopic && this.props.newTopic.image.valid) {
+      image = (
+        <Image
+          style={{width: 60, height: 60, marginTop: 5, marginLeft: 5, borderRadius: 4}}
+          source={{uri:this.props.newTopic.image.url}}
+        />
+      )
+    }
+    else {
+      image = (
+        <Image
+          style={{width: 40, height: 40, marginTop: 15, marginLeft: 15}}
+          source={require("../assets/images/photo-add-512.png")}
+        />
+      )
+      
+    }
+
     return (
-      <View style={Styles.screenFields}>
+      <KeyboardAwareScrollView style={Styles.screenFields} keyboardShouldPersistTaps="always">
 
         <StatusBar barStyle="dark-content" />
         { this.props.updateError && <ErrorHeader text={this.props.updateError} /> }
@@ -63,7 +87,8 @@ export default class TopicAddScreen extends Component {
             <InputField 
               ref="title"
               multiline={true}
-              height={80}
+              height={70}
+              iconRight={<TouchableOpacity onPress={() => this._photoClick()}>{image}</TouchableOpacity>}
             />
 
           </FieldGroup>
@@ -73,7 +98,7 @@ export default class TopicAddScreen extends Component {
             <InputField 
               ref="description"
               multiline={true}
-              height={160}
+              height={115}
               placeholder="Optional" 
             />
 
@@ -81,7 +106,22 @@ export default class TopicAddScreen extends Component {
 
         </Form>
 
-      </View>
+        <ActionSheet 
+          ref={(c) => this.addPhoto = c}
+          options={["Cancel", "From Library", "From Camera"]}
+          cancelButtonIndex={0}
+          onPress={this._handleAddphoto.bind(this)}
+        />
+
+        <ActionSheet 
+          ref={(c) => this.updatePhoto = c}
+          options={["Cancel", "From Library", "From Camera", "Remove Photo"]}
+          cancelButtonIndex={0}
+          destructiveButtonIndex={3}
+          onPress={this._handleAddphoto.bind(this)}
+        />
+
+      </KeyboardAwareScrollView>
     )
   }
 
@@ -91,6 +131,58 @@ export default class TopicAddScreen extends Component {
       description: data.description
     })
     this.props.navigation.setParams({valid: Validate.isNotEmpty(data.title)});
+  }
+
+  _photoClick() {
+    this.props.newTopic.image.valid ? this.updatePhoto.show() : this.addPhoto.show()
+  }
+
+  _handleAddphoto(index) {
+    console.log("index", index);
+    if (index == 1) {
+      this._choosePhoto(false)
+    }
+    else if (index == 2) {
+      this._choosePhoto(true)
+    }
+    else if (index == 3) {
+      this._removePhoto()
+    }
+  }
+
+  _choosePhoto(fromCamera) {
+    if (!fromCamera) {
+      ImagePicker.openPicker({
+        width: 200,
+        height: 200,
+        cropping: true,
+        includeBase64: true
+      }).then(image => {
+        this._savePhoto(Models.Image.fromBase64(`data:${image.mime};base64,${image.data}`));
+      }).catch(e => {
+        // ignore
+      })
+    }
+    else {
+      ImagePicker.openCamera({
+        width: 200,
+        height: 200,
+        cropping: true,
+        includeBase64: true
+      }).then(image => {
+        this._savePhoto(Models.Image.fromBase64(`data:${image.mime};base64,${image.data}`));
+      }).catch(e => {
+        // ignore
+      })
+    }
+  }
+
+  async _removePhoto() {
+    await this.props.updateNewTopic("image", new Models.Image());
+  }
+
+  async _savePhoto(image) {
+    await this.props.updateNewTopic("image", image);
   }
 
   async _next() {
