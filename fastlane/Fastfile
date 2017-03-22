@@ -46,7 +46,7 @@ platform :ios do
     sigh
     gym(scheme: "topek",
       clean: true,
-      project: "./ios/topek.xcodeproj",
+      workspace: "./ios/topek.xcworkspace",
       configuration: "Release")
     deliver(force: true)
     # frameit
