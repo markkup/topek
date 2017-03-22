@@ -3,9 +3,9 @@ Signup
 
 User Scenarios
 --------------
-1. Admin has a list of items that are needed. (no date/time reference - donation list)
-2. Admin has a list of jobs to be filled (on a day but no specific time reference). (event jobs)
-3. Admin has a list of time-slots that need to be filled (specific date/time slots - parent-teacher meetings)
+1. Admin has a list of items that are needed. (no date/time reference - eg. donation list)
+2. Admin has a list of jobs to be filled (on a day but no specific time reference). (eg. event jobs)
+3. Admin has a list of time-slots that need to be filled (specific date/time slots - eg. parent-teacher meetings)
 
 Description
 -----------
