@@ -108,15 +108,15 @@ export default class TopicAddTypeDetailsScreen extends Component {
   _renderLocationFields() {
     if (!this.state.location) {
       return (
-        <FieldGroup title="LOCATION">
+        <FieldGroup title="LOCATION" link="Search >" onPressLink={() => this._chooseLocation()}>
           <InputField ref="locationName" placeholder="Name" value={this.state.locationName} />
-          <TouchableField text="Choose location..." color={"black"} onPress={() => this._chooseLocation()} />
+          {/*<TouchableField text="Choose location..." color={"black"} onPress={() => this._chooseLocation()} />*/}
         </FieldGroup>
       )
     }
     else {
       return (
-        <FieldGroup title="LOCATION">
+        <FieldGroup title="LOCATION" link="Clear" onPressLink={() => this._clearLocation()}>
           <Field text={this.state.location.name} />
           <DescriptionField text={this.state.location.address} />
           <Field style={styles.mapContainer}>
@@ -143,7 +143,7 @@ export default class TopicAddTypeDetailsScreen extends Component {
               />
             </MapView>
           </Field>
-          <TouchableField text="Clear" color={"black"} onPress={() => this._clearLocation()} />
+          {/*<TouchableField text="Clear" color={"black"} onPress={() => this._clearLocation()} />*/}
         </FieldGroup>
       )
     }
