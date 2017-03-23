@@ -2,6 +2,7 @@ import * as Types from "../types"
 import Validate from "../../lib/validate"
 import authService from "../../services/authService"
 import pushService from "../../services/pushService"
+import { AppActions } from "."
 import { Error } from "../../models"
 
 export function login(username, password) {
@@ -19,6 +20,9 @@ export function login(username, password) {
 
       var results = await authService.login(username, password);
       dispatch({type: Types.LOGIN_SUCCESS, payload: results});
+
+      // let's init the app
+      dispatch(AppActions.initialize());
     }
     catch (e) {
       dispatch({type: Types.LOGIN_FAILURE, payload: Error.fromException(e)});

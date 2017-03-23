@@ -6,6 +6,20 @@ import { Error } from "../../models"
 export function initialize() {
   return async (dispatch, getState) => {
 
+    const state = getState();
+    if (!state.auth.isAuthenticated) {
+      return false;
+    }
+
+    await dispatch(initializeOrgs());
+
+    return true;
+  }
+}
+
+function initializeOrgs() {
+  return async (dispatch, getState) => {
+
     await dispatch(orgActions.load());
 
     const state = getState();

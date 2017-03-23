@@ -9,11 +9,7 @@ const UserRecord = Immutable.Record({
   username: "",
   name: "",
   alias: "",
-  avatar: new Immutable.Record({
-    name: "",
-    url: "",
-    valid: false
-  })()
+  avatar: new Image()
 })
 
 export default class User extends UserRecord {

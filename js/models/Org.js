@@ -1,6 +1,7 @@
 import Immutable from "immutable"
 import User from "./User"
 import UserMap from "./UserMap"
+import Image from "./Image"
 
 const OrgRecord = Immutable.Record({
   id: null,
@@ -9,16 +10,8 @@ const OrgRecord = Immutable.Record({
   name: "",
   owner: new User(),
   membersRef: null,
-  image: new Immutable.Record({
-    name: "",
-    url: "",
-    valid: false
-  })(),
-  icon: new Immutable.Record({
-    name: "",
-    url: "",
-    valid: false
-  })()
+  image: new Image(),
+  icon: new Image()
 })
 
 export default class Org extends OrgRecord {
@@ -28,23 +21,11 @@ export default class Org extends OrgRecord {
       .set("createdAt", org.createdAt)
       .set("updatedAt", org.updatedAt)
       .set("name", org.get("name"))
-    if (org.get("owner")) {
-      res = res.set("owner", User.fromParse(org.get("owner")))
-    }
+      .set("image", Image.fromParse(org.get("image")))
+      .set("icon", Image.fromParse(org.get("icon")))
+      .set("owner", User.fromParse(org.get("owner")))
     if (org.get("members")) {
       res = res.set("membersRef", org.get("members"))
-    }
-    if (org.get("image")) {
-      res = res
-        .setIn(["image", "name"], org.get("image").name())
-        .setIn(["image", "url"], org.get("image").url())
-        .setIn(["image", "valid"], true)
-    }
-    if (org.get("icon")) {
-      res = res
-        .setIn(["icon", "name"], org.get("icon").name())
-        .setIn(["icon", "url"], org.get("icon").url())
-        .setIn(["icon", "valid"], true)
     }
     return res;
   }
