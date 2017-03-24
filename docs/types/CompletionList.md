@@ -29,6 +29,11 @@ Requirements
 7. Users should be able to complete the action item if the settings permit them.
 8. Admin should be able to complete the action item.
 
+Action Item Behavior
+--------------------
+1. Upon creation of the completion list, the users will see an action item that includes the task title, task description, and optional due date.
+2. The user will be able to indicate that they have successfully completed the required 
+
 Limitations
 -----------
 1. 
