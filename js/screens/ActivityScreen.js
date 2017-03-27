@@ -5,7 +5,6 @@ import { connectprops, PropMap } from "react-redux-propmap"
 import { Field, FieldGroup, TouchableField, InputField, SwitchField, Form } from "../react-native-fieldsX"
 import Styles, { Color, Dims } from "../styles"
 
-import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons"
 import IonIcon from "react-native-vector-icons/Ionicons"
 
 class Props extends PropMap {
@@ -25,14 +24,14 @@ export default class ActivityScreen extends Component {
 
   render() {
     return (
-      <View style={Styles.screen}>
+      <View style={Styles.screenFields}>
         <Header title="Alerts" subtitle=" ">
           {/*<TouchableOpacity onPress={() => navigate("TopicAddStack")} style={{marginRight: 10,marginBottom:0}}>
             <IonIcon name="ios-add" size={40} color={"#fff"} />
           </TouchableOpacity>*/}
-          <ToolbarButton name="history" tint={Color.white} onPress={() => this.props.navigation.navigate("History")} />
+          <ToolbarButton name="layers" tint={Color.tint} onPress={() => this.props.navigation.navigate("History")} />
         </Header>
-        <ScrollView>
+        <ScrollView style={{flex:1,marginTop:-8}}>
           <FieldGroup>
             {this._renderActivity("Task: 'Return stage equipment' is due tomorrow", "2/8", "1:33p", true)}
             {this._renderActivity("Event: Golf outing on Saturday (rain or shine)", "3/1", "5:45a", false)}
@@ -56,7 +55,7 @@ export default class ActivityScreen extends Component {
     return (
       <Field>
         <View style={{flexDirection: "row"}}>
-          <IonIcon name="md-alert" size={30} color={Color.tint} />
+          <IonIcon name="md-alert" size={25} color={Color.tint} />
           <Text style={{flex:1, fontSize:18, marginLeft: 12}}>{text}</Text>
           {/*<View style={{flexDirection: "column", alignItems: "center", marginLeft: 20}}>
             <Text style={{fontSize: 11, color: "#555"}}>{date}</Text>

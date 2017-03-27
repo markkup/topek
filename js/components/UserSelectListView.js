@@ -172,10 +172,8 @@ let styles = StyleSheet.create({
   toolbarContainer: {
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: "#bbb",
-    height: 44,
     backgroundColor: "#fff",
     flexDirection: "row",
-    paddingTop: 6,
     paddingRight: 2
   },
   emptyMsgContainer: {

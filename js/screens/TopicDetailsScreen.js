@@ -1,12 +1,12 @@
 
 import React, { Component } from "react"
-import { StyleSheet, View, Text, Button, Animated, ActivityIndicator, Image } from "react-native"
-import { ToolbarButton, AvatarImage, ErrorHeader, WorkingOverlay } from "../components"
+import { StyleSheet, View, Text, Button, Animated, ActivityIndicator, Image, TouchableOpacity } from "react-native"
+import { ToolbarButton, AvatarImage, ErrorHeader, WorkingOverlay, TopicImage, AnimatedModal, Toolbar } from "../components"
 import { connectprops, PropMap } from "react-redux-propmap"
-import { Field, FieldGroup, TouchableField, DescriptionField } from "react-native-fields"
+import { Field, FieldGroup, TouchableField, DescriptionField } from "../react-native-fieldsX"
 import Layout from "../lib/Layout"
 import { TopicActions } from "../state/actions"
-import Styles, { Color, Dims } from "../styles"
+import Styles, { Color, Dims, TextSize } from "../styles"
 
 import ActionSheet from "react-native-actionsheet"
 
@@ -34,7 +34,7 @@ export default class TopicDetailsScreen extends Component {
     title: " ",
     header: ({state}, defaultHeader) => ({
       ...defaultHeader,
-      right: <ToolbarButton name="more-horz" tint={Color.white} onPress={() => state.params.rightClick()} />
+      right: <ToolbarButton name="more-horz" tint={Color.tint} onPress={() => state.params.rightClick()} />
     })
   }
 
@@ -69,6 +69,15 @@ export default class TopicDetailsScreen extends Component {
         <WorkingOverlay visible={this.props.isUpdating} />
         { this.props.updateError && <ErrorHeader text={this.props.updateError} /> }
 
+        <AnimatedModal ref="photoViewer">
+          <View style={{marginTop: 22,flexDirection: "column"}}>
+            <View style={{flexDirection:"row", justifyContent:"flex-end", marginBottom:50, marginRight:10}}>
+              <ToolbarButton name="close" tint={Color.white} onPress={() => {this._showPhotoViewer(false)}} />
+            </View>
+            <TopicImage image={topic.image} size={Layout.window.width} />
+         </View>
+        </AnimatedModal>
+
         <View style={styles.animatedContainer}>
           <Animated.ScrollView
             scrollEventThrottle={16}
@@ -81,7 +90,7 @@ export default class TopicDetailsScreen extends Component {
             <View style={styles.contentContainerStyle}>
 
               {topic.description &&
-              <DescriptionField text={topic.description} />}
+              <DescriptionField text={topic.description} style={{paddingVertical:25,borderBottomWidth:StyleSheet.hairlineWidth,borderBottomColor:Color.separator,borderTopWidth:0}} />}
 
               {this._renderDetails()}
               {this._renderMembers()}
@@ -90,7 +99,7 @@ export default class TopicDetailsScreen extends Component {
           </Animated.ScrollView>
         </View>
 
-        {this._renderTitlebar()}
+        {/*this._renderTitlebar()*/}
 
         <ActionSheet 
           ref={(c) => this.moreSheetForOwner = c}
@@ -148,29 +157,31 @@ export default class TopicDetailsScreen extends Component {
     });
 
     let bottomTranslateY = scrollY.interpolate({
-      inputRange: [-10, 0, 10],
-      outputRange: [-3, 0, -11],
+      inputRange: [-10, 0, 1],
+      outputRange: [-3, 0, 0],
     });
 
     let image = null;
     if (topic.image && topic.image.valid) {
-      image = (<Image style={styles.image} source={{uri: topic.image.url}} />)
+      image = (<TouchableOpacity onPress={() => this._showPhotoViewer(true)}>
+        <TopicImage style={styles.image} image={topic.image} />
+      </TouchableOpacity>)
     }
 
     return (
       <View>
         <Animated.View 
           style={[styles.headerBackground, { transform: [{translateY: headerBackgroundTranslateY}] }]}
-         />
+        />
         <Animated.View 
           style={[styles.header]}>
           <Animated.View 
-            style={[styles.caption, {transform: [{translateY: bottomTranslateY}], opacity: infoOpacity}]}>
+            style={[styles.caption, {transform: [{translateY: bottomTranslateY}]/*, opacity: infoOpacity*/}]}>
             {image}
             <View style={styles.captionFrame}>
               <Text style={styles.captionTitle}>{topic.name}</Text>
               <View style={styles.ownerContainer}>
-                <AvatarImage user={topic.owner} size={25} style={styles.ownerAvatar} />
+                <AvatarImage user={topic.owner} size={20} background="dark" style={styles.ownerAvatar} />
                 <Text style={styles.owner}>{topic.owner.alias}</Text>
               </View>
             </View>
@@ -316,6 +327,10 @@ export default class TopicDetailsScreen extends Component {
   _handleMoreForMember(index) {
     
   }
+
+  _showPhotoViewer(visible) {
+    this.refs.photoViewer.show(visible, true);
+  }
 }
 
 const HeaderHeight = 240;
@@ -332,20 +347,20 @@ let styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: Layout.window.height,
-    backgroundColor: Color.tint,
+    backgroundColor: "#fff" //Color.tint,
   },
   header: {
-    backgroundColor: Color.tint,
-    paddingTop: 10,
-    paddingBottom: 20
+    backgroundColor: "#fff", //Color.tint,
+    paddingTop: 0,
+    paddingBottom: 20,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: Color.separator
   },
   contentContainerStyle: {
     paddingBottom: 20
   },
   image: {
-    width: 100, 
-    height: 100, 
-    marginRight: 10, 
+    marginRight: 15, 
     borderRadius: 4
   },
   caption: {
@@ -356,8 +371,8 @@ let styles = StyleSheet.create({
     flex: 1
   },
   captionTitle: {
-    color: "white",
-    fontSize: 24,
+    color: "#000",
+    fontSize: TextSize.normal,
     fontWeight: "500"
   },
   ownerContainer: {
@@ -370,8 +385,8 @@ let styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: "500",
-    color: "#FFFFFFCC",
-    marginTop: 4,
+    color: "#666",
+    marginTop: 1,
     marginLeft: 4
   },
   titlebar: {

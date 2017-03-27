@@ -88,24 +88,24 @@ export default class TasksScreen extends Component {
     let custom = (<View style={{marginBottom: 7}}>
       <SegmentedControls 
         options={options}
-        tint={Color.white}
+        tint={"#aaa"}
         selectedTint={Color.tint}
-        selectedBackgroundColor={Color.white}
-        backTint={Color.tint} 
-        containerBorderTint={"#fff"}
+        selectedBackgroundColor={"#fff"}
+        backTint={"rgb(238, 238, 243)"} 
+        containerBorderTint={"#ddd"}
         selectedOption={this.state.view}
         onSelection={(opt) => this._onViewSelectionChanged(opt)}
         />
     </View>)
 
     return (
-      <View style={Styles.screen}>
+      <View style={Styles.screenFields}>
 
         <Header title={(this.state.view == "Calendar") ? "Calendar" : "Tasks"} subtitle="UPCOMING" custom={custom}>
 
           {(!avatar.valid) ?
           <TouchableOpacity onPress={() => navigate("Profile")} style={{marginRight: 10,marginBottom:-4}}>
-            <IonIcon name="ios-contact" size={45} color={"#fff"} />
+            <IonIcon name="ios-contact" size={45} color={Color.tint} />
           </TouchableOpacity>
           :
           <TouchableOpacity onPress={() => navigate("Profile")} style={{marginRight: 10,marginBottom:4}}>
@@ -176,7 +176,7 @@ export default class TasksScreen extends Component {
   }
 
   _renderTasks() {
-    return (<ScrollView style={{flex:1}}>
+    return (<ScrollView style={{flex:1,marginTop:-8}}>
             <FieldGroup>
               <Field>
                 <View style={{flexDirection: "row"}}>

@@ -32,8 +32,9 @@ platform :ios do
     sigh(adhoc: true)
     gym(scheme: "topek",
       clean: true,
-      workspace: "./ios/topek.xcworkspace",
-      configuration: "ReleaseAdhoc")
+      project: "./ios/topek.xcodeproj",
+      configuration: "ReleaseAdhoc",
+      use_legacy_build_api: true)
     hockey(api_token: "59e931660b6041908f0a6d160282439d")
     slack(message: "Successfully deployed new ios beta app to HockeyApp.")
   end
@@ -46,7 +47,7 @@ platform :ios do
     sigh
     gym(scheme: "topek",
       clean: true,
-      workspace: "./ios/topek.xcworkspace",
+      project: "./ios/topek.xcodeproj",
       configuration: "Release")
     deliver(force: true)
     # frameit

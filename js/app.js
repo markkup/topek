@@ -38,8 +38,8 @@ class App extends Component {
   _renderStatusBar() {
     return <StatusBar
       translucent={true}
-      backgroundColor="#00000000"
-      barStyle="light-content"
+      backgroundColor="rgba(0, 0, 0, 0.2)"
+      barStyle="dark-content"
     />
   }
 }

@@ -75,7 +75,7 @@ Header.defaultProps = {
 var styles = StyleSheet.create({
   component: {
     flexDirection: "column",
-    backgroundColor: Color.tint
+    backgroundColor: Color.white
   },
   content: {
     flexDirection: "row",
@@ -91,14 +91,14 @@ var styles = StyleSheet.create({
   titleText: {
     fontSize: 40,
     fontWeight: "800",
-    color: "#fff",
+    color: Color.black,
     
   },
   subText: {
     position: "absolute",
     top: 0,
-    color: "rgba(255, 255, 255, 0.7)",
-    fontSize: 14,
+    color: "rgba(0, 0, 0, 0.7)",
+    fontSize: 12,
   },
   toolsContainer: {
     flexDirection: "column",

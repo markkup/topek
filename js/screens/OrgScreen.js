@@ -86,7 +86,7 @@ export default class OrgScreen extends Component {
       <View style={styles.navbar}>
         <ToolbarButton 
           name="arrow-back" 
-          tint={Color.tintNavbar} 
+          tint={Color.white} 
           style={styles.navbarButton}
           onPress={() => goBack(null)} /> 
         <View style={styles.navbarTextContainer}>
@@ -94,7 +94,7 @@ export default class OrgScreen extends Component {
         </View>
         <ToolbarButton 
           name="settings" 
-          tint={Color.tintNavbar} 
+          tint={Color.white} 
           style={styles.navbarButton}
           onPress={() => navigate("ProfileEditStack")} /> 
       </View>

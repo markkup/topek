@@ -5,7 +5,7 @@ export default class Toolbar extends Component {
   render() {
     const align = this.props.align == "right" ? "flex-end" : "flex-start";
     return (
-      <View style={[styles.container, {justifyContent:align}]}>
+      <View style={[styles.container, {justifyContent:align}, this.props.style]}>
         {this.props.children}
       </View>
     )
@@ -22,7 +22,7 @@ Toolbar.defaultProps = {
 
 var styles = StyleSheet.create({
   container: {
-    height: 28,
+    height: 44,
     flexDirection: "row",
     alignItems: "center",
     flex: 1

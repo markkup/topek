@@ -47,7 +47,7 @@ export default class TopicAddConfirmScreen extends Component {
 
     let text = "";
     if (newTopic) {
-      text = "Adding a new " + newTopic.details.first().type.toUpperCase() + " topic titled '" + newTopic.name + "'. ";
+      text = "Adding a new " + newTopic.type.toUpperCase() + " topic titled '" + newTopic.name + "'. ";
       text += "The new topic is assigned to " + newTopicMembers.size + " member(s).";
     }
 

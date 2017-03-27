@@ -153,8 +153,8 @@ export default class TopicAddScreen extends Component {
   _choosePhoto(fromCamera) {
     if (!fromCamera) {
       ImagePicker.openPicker({
-        width: 200,
-        height: 200,
+        width: 400,
+        height: 400,
         cropping: true,
         includeBase64: true
       }).then(image => {

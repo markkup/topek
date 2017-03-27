@@ -3031,6 +3031,10 @@ npmlog@^2.0.4:
     are-we-there-yet "~1.1.2"
     gauge "~1.2.5"
 
+nt-transmit-transparently@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/nt-transmit-transparently/-/nt-transmit-transparently-1.0.7.tgz#345cf3ffda06ba1bd629935bafac9e7820385076"
+
 number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
@@ -3390,6 +3394,17 @@ react-native-image-crop-picker@^0.12.8:
   version "0.12.8"
   resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.12.8.tgz#e4821f3985198275ce4c5f399625d631521c5c9b"
 
+react-native-image-pan-zoom@^1.1.12:
+  version "1.1.12"
+  resolved "https://registry.yarnpkg.com/react-native-image-pan-zoom/-/react-native-image-pan-zoom-1.1.12.tgz#b48c4b54c541e407aa25945bd6c5fbc78269e2fb"
+
+react-native-image-zoom-viewer@^1.2.47:
+  version "1.2.47"
+  resolved "https://registry.yarnpkg.com/react-native-image-zoom-viewer/-/react-native-image-zoom-viewer-1.2.47.tgz#6a87c36fb59e393f12f577a4ad43e43223de4372"
+  dependencies:
+    nt-transmit-transparently "^1.0.7"
+    react-native-image-pan-zoom "^1.1.12"
+
 react-native-invertible-scroll-view@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-invertible-scroll-view/-/react-native-invertible-scroll-view-1.0.0.tgz#60ceb384dc950c34eba3a5aeda39f97cdc7d4e23"
@@ -3422,6 +3437,18 @@ react-native-push-notification@^2.2.1:
 react-native-radio-buttons@^0.14.0:
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/react-native-radio-buttons/-/react-native-radio-buttons-0.14.0.tgz#df8b2417eecc63f65704acd20144fdd169b2c4a4"
+
+react-native-root-modal@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-root-modal/-/react-native-root-modal-1.1.0.tgz#4bd4619e3ca7a6e7d6fcfd0db50ba343e2797560"
+  dependencies:
+    react-native-root-siblings "^1.2.0"
+
+react-native-root-siblings@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-root-siblings/-/react-native-root-siblings-1.2.0.tgz#bc8d2b73528089ad6e001f8c8931394f1eaab8d4"
+  dependencies:
+    static-container "^1.0.0"
 
 react-native-scrollable-mixin@^1.0.1:
   version "1.0.1"
@@ -4016,6 +4043,10 @@ sshpk@^1.7.0:
 stacktrace-parser@^0.1.3:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/stacktrace-parser/-/stacktrace-parser-0.1.4.tgz#01397922e5f62ecf30845522c95c4fe1d25e7d4e"
+
+static-container@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/static-container/-/static-container-1.1.0.tgz#3f67d15054a2c873528cbe998c190eceb3512c84"
 
 statuses@1:
   version "1.3.1"

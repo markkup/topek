@@ -49,7 +49,8 @@ let styles = StyleSheet.create({
     paddingVertical: 4,
     flexDirection: "row",
     flex: 1,
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: Color.white
   },
   avatar: {
 

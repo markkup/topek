@@ -10,7 +10,7 @@ class Props extends PropMap {
   map(props) {
     props.isUpdating = this.state.topics.isUpdating;
     props.updateError = this.state.topics.updateError;
-    props.saveClick = this.bindEvent(TopicActions.add);
+    props.updateNewTopic = this.bindEvent(TopicActions.updateNewTopic);
   }
 }
 
@@ -42,7 +42,8 @@ export default class TopicAddScreen extends Component {
         
           <FieldGroup>
             {/*<TouchableField text="Announcement" icon="flag" accessory={true} onPress={() => this._saveType()} />*/}
-            <SelectField text="Event" icon="calendar" accessory={true} onPress={() => this._saveType()} />
+            <SelectField text="Announcement" icon="volume-2" accessory={true} onPress={() => this._saveType("announcement")} />
+            <SelectField text="Event" icon="calendar" accessory={true} onPress={() => this._saveType("event")} />
           </FieldGroup>
 
         </Form>
@@ -51,11 +52,14 @@ export default class TopicAddScreen extends Component {
     )
   }
 
-  async _saveType() {
-    const { navigate } = this.props.navigation;
-    //if (await this.props.saveClick(this.state.title))
-    //  this.props.navigation.goBack(null);
-    navigate("TopicAddTypeDetails")
+  async _saveType(type) {
+    await this.props.updateNewTopic("type", type);
+    if (type == "announcement") {
+      this.props.navigation.navigate("TopicAddMembers")
+    }
+    else {
+      this.props.navigation.navigate("TopicAddTypeDetails")
+    }
   }
 }
 

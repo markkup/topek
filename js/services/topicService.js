@@ -21,7 +21,7 @@ class TopicService {
       let query = new Parse.Query("Topic")
         .include("owner")
         .include("members")
-        .descending("updatedAt")
+        .descending("createdAt")
         .equalTo("org", org);
 
       const data = await query.find();
@@ -73,6 +73,7 @@ class TopicService {
       }
 
       let t = new ParseTopic();
+      t.set("type", topic.type);
       t.set("name", topic.name);
       t.set("owner", me);
       t.set("org", org);

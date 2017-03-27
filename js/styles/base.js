@@ -22,7 +22,7 @@ export default {
   },
 
   navbar: {
-    backgroundColor: Color.tint,
+    backgroundColor: "#fff",
     shadowColor: "transparent"
   },
 
@@ -38,11 +38,11 @@ export default {
   },
 
   navbarTitle: {
-    color: Color.tintNavbar
+    color: Color.black
   },
 
   navbarModal: {
-    backgroundColor: Color.white
+    backgroundColor: "#f7f7f7"
   },
 
   navbarTitleModal: {

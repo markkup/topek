@@ -7,6 +7,7 @@ import IonIcon from "react-native-vector-icons/Ionicons"
 import EvilIcon from "react-native-vector-icons/EvilIcons"
 import MaterialCommunityIcon from "react-native-vector-icons/MaterialCommunityIcons"
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons"
+import Octicon from "react-native-vector-icons/Octicons"
 
 export default class ToolbarButton extends Component {
   render() {
@@ -15,48 +16,52 @@ export default class ToolbarButton extends Component {
 
     switch (this.props.name) {
       case "arrow-back": {
-        icon = (<IonIcon name="ios-arrow-back" size={30} color={this.props.tint} style={[styles.icon]} />);
+        icon = (<IonIcon name="ios-arrow-back" size={30} color={this.props.tint} style={[styles.icon, {marginLeft:-2,paddingTop:5}, this.props.styleImage]} />);
         break;
       }
       case "add": {
-        icon = (<IonIcon name="ios-add" size={36} color={this.props.tint} style={{marginBottom:-2}} />);
+        icon = (<IonIcon name="ios-add" size={44} color={this.props.tint} style={[styles.icon, {marginTop:-2,paddingTop:0,height:40}, this.props.styleImage]} />);
         break;
       }
       case "more":
       case "more-horz": {
-        icon = (<MaterialCommunityIcon name="dots-horizontal" size={36} color={this.props.tint} style={styles.icon} />);
+        icon = (<MaterialCommunityIcon name="dots-horizontal" size={30} color={this.props.tint} style={[styles.icon, {marginLeft:-1,paddingTop:5}, this.props.styleImage]} />);
         break;
       }
       case "more-vert": {
-        icon = (<MaterialCommunityIcon name="dots-vertical" size={36} color={this.props.tint} style={styles.icon} />);
+        icon = (<MaterialCommunityIcon name="dots-vertical" size={30} color={this.props.tint} style={[styles.icon, {marginLeft: 0,paddingTop:5}, this.props.styleImage]} />);
         break;
       }
       case "checkbox": {
-        icon = (<IonIcon name="ios-checkbox-outline" size={25} color={this.props.tint} style={[styles.icon, {marginTop:-1}]} />);
+        icon = (<IonIcon name="ios-checkbox-outline" size={30} color={this.props.tint} style={[styles.icon, {paddingTop:5}, this.props.styleImage]} />);
         break;
       }
       case "contact": {
-        icon = (<IonIcon name="ios-contact" size={25} color={this.props.tint} style={[styles.icon, {marginTop:-1}]} />);
+        icon = (<IonIcon name="ios-contact" size={30} color={this.props.tint} style={[styles.icon, {paddingTop:5}, this.props.styleImage]} />);
         break;
       }
       case "close": {
-        icon = (<EvilIcon name="close" size={30} color={this.props.tint} style={{marginTop:-0}} />);
+        icon = (<EvilIcon name="close" size={34} color={this.props.tint} style={[styles.icon, {marginLeft: 0}, this.props.styleImage]} />);
         break;
       }
       case "heart": {
-        icon = (<IonIcon name="ios-heart" size={30} color={this.props.tint} style={{marginTop:-0}} />);
+        icon = (<IonIcon name="ios-heart" size={30} color={this.props.tint} style={[styles.icon, {paddingTop:5}, this.props.styleImage]} />);
         break;
       }
       case "heart-outline": {
-        icon = (<IonIcon name="ios-heart-outline" size={30} color={this.props.tint} style={{marginTop:-0}} />);
+        icon = (<IonIcon name="ios-heart-outline" size={30} color={this.props.tint} style={[styles.icon, {paddingTop:5}, this.props.styleImage]} />);
+        break;
+      }
+      case "options": {
+        icon = (<IonIcon name="ios-options" size={25} color={this.props.tint} style={[styles.icon, {marginLeft: 0}, this.props.styleImage]} />);
         break;
       }
       case "history": {
-        icon = (<MaterialIcon name="history" size={30} color={this.props.tint} style={{marginTop:-0}} />);
+        icon = (<MaterialIcon name="history" size={30} color={this.props.tint} style={[styles.icon, {paddingTop:5}, this.props.styleImage]} />);
         break;
       }
       default: {
-        icon = (<SimpleLineIcon name={this.props.name} size={20} color={this.props.tint} style={styles.icon} />);
+        icon = (<SimpleLineIcon name={this.props.name} size={25} color={this.props.tint} style={[styles.icon, this.props.styleImage]} />);
         break;
       }
     }
@@ -89,11 +94,14 @@ var styles = StyleSheet.create({
 
   },
   container: {
+    width: 40,
+    height: 40,
     padding: 0,
-    paddingHorizontal: 8,
-    paddingVertical: 2
+    flexDirection: "row",
+    justifyContent: "center",
   },
   icon: {
-    padding: 0
+    paddingTop: 7,
+    marginLeft: -2
   }
 })

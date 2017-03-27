@@ -19,7 +19,7 @@ const tabsOptions = {
         inactiveTintColor: Color.tintInactive,
         activeTintColor: Color.tint,
         showIcon: true,
-        showLabel: Platform.OS === "ios",
+        showLabel: false,
         style: {
           backgroundColor: "#FFF",
         },

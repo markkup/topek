@@ -26,7 +26,7 @@ export default class HistoryScreen extends Component {
 
   render() {
     return (
-      <View style={Styles.screen}>
+      <View style={Styles.screenFields}>
         <ScrollView>
           <FieldGroup>
             {this._renderActivity("@dave added a new topic 'Volleyball club parent meeting for anyone wanting to travel to Harrisburg'", "2/8", "1:33p", true)}

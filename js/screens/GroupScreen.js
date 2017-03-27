@@ -55,7 +55,7 @@ export default class GroupScreen extends Component {
     }
 
     return (
-      <View style={Styles.screen}>
+      <View style={Styles.screenFields}>
         <Header title="Group" subtitle={org.name.toUpperCase()}>
           <TouchableOpacity 
             onPress={() => navigate("Org")} 

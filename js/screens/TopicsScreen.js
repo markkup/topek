@@ -1,13 +1,14 @@
 import React, { Component } from "react"
-import { StyleSheet, View, Text, Button, ListView, TouchableHighlight, TouchableOpacity, RefreshControl } from "react-native"
-import { ErrorHeader, ToolbarButton, Header, AvatarImage } from "../components"
+import { StyleSheet, View, Text, TextInput, Button, ListView, TouchableHighlight, TouchableOpacity, RefreshControl } from "react-native"
+import { ErrorHeader, Toolbar, ToolbarButton, ToolbarButtonExample, Header, AvatarImage, TopicImage } from "../components"
 import Immutable from "immutable"
 import Datetime from "../lib/datetime"
 import { connectprops, PropMap } from "react-redux-propmap"
 import { TopicActions } from "../state/actions"
-import Styles, { Color, Dims } from "../styles"
+import Styles, { Color, Dims, TextSize } from "../styles"
 
 import IonIcon from "react-native-vector-icons/Ionicons"
+import SimpleLineIcon from "react-native-vector-icons/SimpleLineIcons"
 
 class Props extends PropMap {
   map(props) {
@@ -52,16 +53,29 @@ export default class TopicsScreen extends Component {
   render() {
     const { navigate } = this.props.navigation;
 
+    let header = (
+      <View style={{height:66,backgroundColor:"#fff",borderBottomWidth:StyleSheet.hairlineWidth,borderBottomColor:Color.separator}}>
+        <Toolbar style={{marginTop:20,paddingHorizontal:4}}>
+          <ToolbarButton name="options" onPress={() => {}} />
+          <View style={{flex:1}}>
+            <TextInput 
+              style={{fontSize:14,height:28,backgroundColor:"rgb(233,235,238)",marginTop:1,marginHorizontal:5,borderRadius:6,paddingHorizontal:10}}
+              placeholder="Search"
+              underlineColorAndroid="transparent" />
+          </View>
+          <ToolbarButton name="add" onPress={() => this._addNewTopic()} />
+        </Toolbar>
+      </View>
+    )
+
+    let example = null //<ToolbarButtonExample />
+
     return (
-      <View style={Styles.screen}>
-        <Header title="Topics" subtitle="MOST RECENT">
-          <TouchableOpacity onPress={() => this._addNewTopic()} style={{marginRight: 10,marginBottom:0}}>
-            <IonIcon name="ios-add" size={40} color={"#fff"} />
-          </TouchableOpacity>
-        </Header>
+      <View style={Styles.screenFields}>
+        {header}
+        {example}
         { this.props.loadError && <ErrorHeader text={this.props.loadError} /> }
         <ListView
-          style={{paddingTop: 8}}
           dataSource={this.state.dataSource}
           renderRow={this._renderRow.bind(this)}
           enableEmptySections={true}
@@ -99,17 +113,87 @@ export default class TopicsScreen extends Component {
     else {
       date = date.format("M/d/Y")
     }
+
+    let icon = null;
+    let sub = null;
+    let when = null;
+    let memberCount = topic.memberCount || 0;
+    let status = null;
+
+    if (topic.type == "event") {
+      let detail = topic.details[0]
+
+      let location = null;
+      if (detail.location && detail.location.name) {
+        location = detail.location.name
+      }
+      else if (detail.locationName && detail.locationName != "") {
+        location = detail.locationName
+      }
+
+      let start = Datetime(detail.startDate)
+      let end = Datetime(detail.endDate)
+      let occurs = null
+      if (detail.allDay == true) {
+        occurs = "All-Day: "
+        if (start.isSame(end, "day"))
+          occurs += start.format("MMM Do")
+        else
+          occurs += start.format("MMM Do") + " to " + end.format("MMM Do")
+      }
+      else {
+        if (start.isSame(end, "day"))
+          occurs = start.format("MMM Do h:mm A") + " to " + end.format("h:mm A")
+        else
+          occurs = start.format("MMM Do h:mm A") + " to " + end.format("MMM Do h:mm A")
+      }
+
+      icon = <SimpleLineIcon name="event" size={18} style={styles.icon} />
+      sub = location && <Text style={styles.subtext}>{location}</Text>
+      when = occurs && <Text style={styles.when}>{occurs}</Text>
+      let memberstr = memberCount == 1 ? "member" : "members";
+      status = "0/" + memberCount + " " + memberstr + " accepted"
+    }
+    else if (topic.type == "announcement") {
+      icon = <SimpleLineIcon name="volume-2" size={18} style={styles.icon} />
+    }
+    else {
+      icon = <SimpleLineIcon name="info" size={18} style={styles.icon} />
+    }
+
+    if (!status) {
+      status = memberCount != 1 ? memberCount + " members" : memberCount + " member";
+    }
+
     return (
       <TouchableHighlight onPress={onPress} underlayColor="#eee">
         <View style={styles.row}>
-          <View style={styles.rowHeader}>
-            <AvatarImage user={topic.owner} size={25} background="dark" />
-            <Text style={styles.owner}>{topic.owner.name}</Text>
-            <Text style={styles.date}>{date}</Text>
+          
+          <View style={styles.rowInfo}>
+            {icon}
+            {/*<Text>{"●"}</Text>*/}
           </View>
-          <Text style={styles.text}>
-            {topic.name} 
-          </Text>
+
+          <View style={styles.rowContent}>
+
+            <Text style={styles.text}>{topic.name}</Text>
+          
+            <View style={styles.details}>
+              {sub}
+              {when}
+            </View>
+
+            <View style={styles.status}>
+              <AvatarImage user={topic.owner} size={20} background="dark" />
+              <Text style={styles.owner}>{topic.owner.alias}</Text>
+              <Text style={styles.dot}>{"•"}</Text>
+              <Text style={styles.members}>{status}</Text>
+            </View>
+
+          </View>
+
+          {topic.image.valid && <TopicImage image={topic.image} size={60} style={{marginLeft:0,marginRight:0}} />}
+
         </View>
       </TouchableHighlight>
     );
@@ -127,33 +211,81 @@ export default class TopicsScreen extends Component {
 
 let styles = StyleSheet.create({
   row: {
-    flexDirection: "column",
-    justifyContent: "center",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-start",
     padding: 10,
     paddingLeft: Dims.horzPadding,
-    paddingRight: Dims.horzPadding
+    paddingRight: Dims.horzPadding,
+    backgroundColor: Color.white
   },
-  rowHeader: {
-    flexDirection: "row",
-    marginBottom: 3
+  icon: {
+    marginRight: 10,
+    marginTop: 1,
+    color: Color.subtle,
+  },
+  rowContent: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    paddingRight: 10
+  },
+  rowInfo: {
+    flexDirection: "column",
+    alignItems: "center",
   },
   owner: {
-    fontWeight: "600",
-    color: "#777",
-    flex: 1,
-    fontSize: 16,
+    fontWeight: "500",
+    color: Color.subtle,
+    fontSize: TextSize.tiny,
+    marginLeft: 4,
+    marginTop: 2
+  },
+  dot: {
+    fontWeight: "500",
+    color: Color.subtle,
+    fontSize: TextSize.tiny,
+    marginLeft: 4,
+    marginTop: 2
+  },
+  members: {
+    fontWeight: "500",
+    color: Color.subtle,
+    fontSize: TextSize.tiny,
     marginLeft: 4,
     marginTop: 2
   },
   text: {
+    fontSize: TextSize.normal,
+    fontWeight: "500",
+    color: "#000"
+  },
+  details: {
     flex: 1,
-    fontSize: 18,
-    paddingRight: 20,
-    color: "#000",
-    marginLeft: 29
+    flexDirection: "column",
+    marginTop: 4
+  },
+  status: {
+    flexDirection: "row",
+    marginTop: 8,
+    marginBottom: 8
+  },
+  subtext: {
+    flex: 1,
+    fontSize: TextSize.tiny,
+    fontWeight: "500",
+    color: Color.tint,
+    marginTop: 4
+  },
+  when: {
+    flex: 1,
+    fontSize: TextSize.tiny,
+    fontWeight: "500",
+    color: Color.tint,
+    marginTop: 4
   },
   date: {
-    color: "#999",
+    color: Color.subtle,
     fontSize: 14,
   }
 })
