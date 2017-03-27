@@ -18,6 +18,11 @@ The CompletionList topic will include:
 - flag indicating whether user can complete the action item or only the admin.
 - flag indicating whether users can see the other users who are on the list (and their status).
 
+Action Item Behavior
+--------------------
+1. Upon creation of the completion list, the users will see an action item that includes the task title, task description, and optional due date.
+2. The user will be able to indicate that they have successfully completed the required 
+
 Requirements
 ------------
 1. Admin should be able to create a new CompletionList topic.

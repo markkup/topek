@@ -9,7 +9,7 @@ User Scenarios
 
 Description
 -----------
-Admin assigns one or more tasks to one or more users. The tasks will be displayed as a checklist of boxes each user can check off. The list of tasks can have an optional due date assigned to it.  The user will have sole control to indicate whether the task is completed.
+Admin assigns a task to one or more users. The tasks will be displayed as a checklist of boxes each user can check off on their Task list within Topek. The list of tasks can have an optional due date assigned to it. The user will have sole control to indicate whether the task is completed.
 
 
 Requirements
