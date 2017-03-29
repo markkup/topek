@@ -16,6 +16,14 @@ Admins will create a photo album topic to be able to collect or share photos wit
 - max number of photos in album
 - max number of photos per user
 
+Action Item Behavior
+--------------------
+1. There are no action items for this topic.
+
+Calendar Behavior
+-----------------
+1. There are no calendar items for this topic.
+
 Requirements
 ------------
 1. Admin should be able to create a new photo album topic.
