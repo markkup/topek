@@ -23,6 +23,7 @@ Admins want to publicize an event that is occurring in the future.  After they d
 Action Item Behavior
 --------------------
 1. If an RSVP is available for the event, the RSVP should be added to the Action Item list with the RSVP date.
+2. The Action Item will be removed once the user responds to the RSVP request.
 2. (Should something related to "Attending the Event" be added to the Action Item list?  I feel not, but let's discuss.)
 
 Calendar Behavior
