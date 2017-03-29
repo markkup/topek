@@ -18,6 +18,9 @@ Admins want to publicize an event that is occurring in the future.  After they d
 - event start time/(optional) end time
 - event location name and coordinates
 
+Action Item Behavior
+--------------------
+
 Requirements
 ------------
 1. Admin should be able to create a new event topic.
