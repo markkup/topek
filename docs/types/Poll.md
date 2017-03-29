@@ -6,10 +6,20 @@ User Scenarios
 1. Admin wants to conduct a single question poll with users (opinions of current events, voting for people/projects/etc, etc)
 2. Admin wants to see the "live" results of polls that are currently being conducted.
 3. Admin wants to let users see the "live" results of polls that are currently being conducted.
+4. Admin requires users to complete the poll.
 
 Description
 -----------
 Admins want to be able to poll their constituency for answers to simple basic questions.  Poll questions have simple predetermined answers.  The results can be helpful to see the overall mood, opinion, etc. of the users.  Results of polls are often viewed in a pie or bar chart to get a pictorial display of the responses that make it easy to determine the outcome of the poll.  There are times when admins don't want the users to be able to see the results, yet most of the time they will probably make the results public.
+
+Action Item Behavior
+--------------------
+1. If the Admin indicates that the user is required to complete the poll, then an item would be added to the Action Item list.
+2. The Action Item would be removed after the user completes the poll.
+
+Calendar Behavior
+-----------------
+1. There is no calendar behavior for this topic.
 
 Requirements
 ------------
