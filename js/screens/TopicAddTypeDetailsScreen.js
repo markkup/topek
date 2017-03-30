@@ -39,7 +39,8 @@ export default class TopicAddTypeDetailsScreen extends Component {
       endDate: Datetime().startOf("hour").add(1, "hours").toDate(),
       reminder: null,
       location: null,
-      locationName: ""
+      locationName: "",
+      ack: true 
     }
   }
 

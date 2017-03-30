@@ -7,13 +7,16 @@ import { connectprops, PropMap } from "react-redux-propmap"
 import { TopicActions } from "../state/actions"
 import Styles, { Color, Dims, TextSize } from "../styles"
 
+import { TopicSelectors } from "../state/selectors"
+
 import IonIcon from "react-native-vector-icons/Ionicons"
 import SimpleLineIcon from "react-native-vector-icons/SimpleLineIcons"
 
 class Props extends PropMap {
   map(props) {
     props.isAuthenticated = this.state.auth.isAuthenticated;
-    props.topics = this.state.topics.list;
+    props.topics = TopicSelectors.getTopicList(this.state); //this.state.topics.list;
+    props.members = this.state.members.list;
     props.isRefreshing = this.state.topics.isRefreshing;
     props.loadError = this.state.topics.loadError;
     props.loadTopics = this.bindEvent(TopicActions.load);
@@ -97,8 +100,9 @@ export default class TopicsScreen extends Component {
     navigate("TopicAddStack");
   }
 
-  _renderRow(topic, sectionID, rowID, highlightRow) {
+  _renderRow(rowData, sectionID, rowID, highlightRow) {
     const {navigate} = this.props.navigation;
+    const { topic, read } = rowData;
     var onPress = () => { 
       this.props.topicSelect(topic)
       navigate("TopicDetails")
@@ -117,7 +121,7 @@ export default class TopicsScreen extends Component {
     let icon = null;
     let sub = null;
     let when = null;
-    let memberCount = topic.memberCount || 0;
+    let memberCount = rowData.topic.memberCount || 0;
     let status = null;
 
     if (topic.type == "event") {
@@ -135,24 +139,30 @@ export default class TopicsScreen extends Component {
       let end = Datetime(detail.endDate)
       let occurs = null
       if (detail.allDay == true) {
-        occurs = "All-Day: "
+        occurs = ""
         if (start.isSame(end, "day"))
-          occurs += start.format("MMM Do")
+          occurs += start.format("MMMM Do")
         else
           occurs += start.format("MMM Do") + " to " + end.format("MMM Do")
       }
       else {
         if (start.isSame(end, "day"))
-          occurs = start.format("MMM Do h:mm A") + " to " + end.format("h:mm A")
+          occurs = start.format("MMM Do, h:mm A") + " to " + end.format("h:mm A")
         else
-          occurs = start.format("MMM Do h:mm A") + " to " + end.format("MMM Do h:mm A")
+          occurs = start.format("MMM Do, h:mm A") + " to " + end.format("MMM Do h:mm A")
       }
+
+      if (occurs) occurs = occurs.replace(/:00/g, "")
+      if (occurs) occurs = occurs.replace(" " + new Date().getFullYear(), "")
 
       icon = <SimpleLineIcon name="event" size={18} style={styles.icon} />
       sub = location && <Text style={styles.subtext}>{location}</Text>
       when = occurs && <Text style={styles.when}>{occurs}</Text>
-      let memberstr = memberCount == 1 ? "member" : "members";
-      status = "0/" + memberCount + " " + memberstr + " accepted"
+      
+      if (detail.ack) {
+        let memberstr = memberCount == 1 ? "member" : "members";
+        status = "0/" + memberCount + " " + memberstr + " accepted"
+      }
     }
     else if (topic.type == "announcement") {
       icon = <SimpleLineIcon name="volume-2" size={18} style={styles.icon} />
@@ -162,7 +172,9 @@ export default class TopicsScreen extends Component {
     }
 
     if (!status) {
-      status = memberCount != 1 ? memberCount + " members" : memberCount + " member";
+      if (memberCount == this.props.members.size)
+        status = "all members"
+      else status = memberCount != 1 ? memberCount + " members" : memberCount + " member";
     }
 
     return (
@@ -171,7 +183,7 @@ export default class TopicsScreen extends Component {
           
           <View style={styles.rowInfo}>
             {icon}
-            {/*<Text>{"●"}</Text>*/}
+            {!read && <Text style={styles.unread}>{"●"}</Text>}
           </View>
 
           <View style={styles.rowContent}>
@@ -287,5 +299,11 @@ let styles = StyleSheet.create({
   date: {
     color: Color.subtle,
     fontSize: 14,
+  },
+  unread: {
+    color: Color.blue,
+    marginRight: 11,
+    marginTop: 7,
+    fontSize: 16
   }
 })

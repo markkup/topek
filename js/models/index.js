@@ -1,5 +1,7 @@
 import Topic from "./Topic"
 import TopicMap from "./TopicMap"
+import TopicState from "./TopicState"
+import TopicStateMap from "./TopicStateMap"
 import User from "./User"
 import UserMap from "./UserMap"
 import Org from "./Org"
@@ -13,6 +15,8 @@ import Image from "./Image"
 export {
   Topic,
   TopicMap,
+  TopicState,
+  TopicStateMap,
   User,
   UserMap,
   Org,

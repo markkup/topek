@@ -13,8 +13,16 @@ export function load(skipRequest = true) {
       if (!state.prefs.org)
         throw "No current org set"
 
-      var results = await topicService.load(state.prefs.org.id);
-      dispatch({type: Types.TOPICS_LOAD_SUCCESS, payload: results});
+      if (!state.profile.user)
+        throw "No current user set"
+
+      // get topic state first
+      var states = await topicService.loadState(state.profile.user.id);
+      dispatch({type: Types.TOPICS_STATE_LOAD_SUCCESS, payload: states});
+
+      // now get topics
+      var topics = await topicService.load(state.prefs.org.id);
+      dispatch({type: Types.TOPICS_LOAD_SUCCESS, payload: topics});
     }
     catch (e) {
       dispatch({type: Types.TOPICS_LOAD_FAILURE, payload: Error.fromException(e)});
@@ -62,8 +70,9 @@ export function destroy(id) {
 
 export function setSelected(topic) {
   return async (dispatch, getState) => {
-    dispatch({type: Types.TOPICS_SELECT_TOPIC, payload: topic});
+    await dispatch({type: Types.TOPICS_SELECT_TOPIC, payload: topic});
     dispatch({type: Types.TOPICS_SELECT_TOPIC_MEMBERS_REQUEST});
+    dispatch(markSelectedTopicAsRead(true));
 
     try {
       var results = await topicService.loadMembers(topic.id);
@@ -110,6 +119,25 @@ export function removeMembersfromSelectedTopic(member) {
 
       var results = await topicService.removeMember(state.topics.selectedTopic.id, member);
       dispatch({type: Types.TOPICS_SELECT_TOPIC_MEMBERS_SUCCESS, payload: results});
+      return true;
+    }
+    catch (e) {
+      dispatch({type: Types.TOPICS_UPDATE_FAILURE, payload: Error.fromException(e)});
+    }
+    return false;
+  }
+}
+
+export function markSelectedTopicAsRead(read) {
+  return async (dispatch, getState) => {
+    try {
+
+      const state = getState();
+      if (!state.topics.selectedTopic)
+        throw "No topic has been selected"
+
+      var results = await topicService.markRead(state.profile.user.id, state.topics.selectedTopic.id, read);
+      dispatch({type: Types.TOPICS_STATE_UPDATE_SUCCESS, payload: results});
       return true;
     }
     catch (e) {

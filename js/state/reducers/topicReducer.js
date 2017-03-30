@@ -78,7 +78,7 @@ export default function(state = initialState, action = {}) {
 
     case Types.TOPICS_UPDATE_SUCCESS: {
       const topic = action.payload;
-      state = state.set("list", new TopicMap({[topic.id]: topic}).merge(state.list))
+      state = state.set("list", state.list.set(topic.id, topic))
         .set("isUpdating", false)
         .set("updateError", null);
       if (state.selectedTopic && state.selectedTopic.id == topic.id) {

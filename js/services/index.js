@@ -26,22 +26,23 @@ export default {
 
   setupLiveQueries: (dispatch) => {
 
-    let query = new Parse.Query("Topic").include("owner").include("members").descending("updatedAt");
-    let subscription = query.subscribe();
+    let queryTopic = new Parse.Query("Topic").include("owner").include("members").descending("updatedAt");
+    let subscriptionTopic = queryTopic.subscribe();
     
-    subscription.on("create", (topic) => {
+    subscriptionTopic.on("create", (topic) => {
       console.log("LiveQuery(Topic) dispatch TOPICS_ADD_SUCCESS: ", topic);
       dispatch({type: Types.TOPICS_ADD_SUCCESS, payload: Topic.fromParse(topic)});
     });
 
-    subscription.on("update", (topic) => {
+    subscriptionTopic.on("update", (topic) => {
       console.log("LiveQuery(Topic) dispatch TOPICS_UPDATE_SUCCESS: ", topic);
       dispatch({type: Types.TOPICS_UPDATE_SUCCESS, payload: Topic.fromParse(topic)});
     });
 
-    subscription.on("delete", (topic) => {
+    subscriptionTopic.on("delete", (topic) => {
       console.log("LiveQuery(Topic) dispatch TOPICS_REMOVE_SUCCESS: ", topic);
       dispatch({type: Types.TOPICS_REMOVE_SUCCESS, payload: topic.id});
     });
+
   }
 }

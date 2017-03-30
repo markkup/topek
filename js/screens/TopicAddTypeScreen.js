@@ -1,7 +1,7 @@
 import React, { Component } from "react"
-import { StyleSheet, View, Text, Button, StatusBar, TouchableHighlight } from "react-native"
-import { ToolbarTextButton, ErrorHeader, FieldButton } from "../components"
-import { Form, SelectField, Field, FieldGroup, TouchableField } from "../react-native-fieldsX"
+import { StyleSheet, View, Text, Button, StatusBar, ScrollView, Keyboard } from "react-native"
+import { ToolbarTextButton, ErrorHeader, ToolbarButton } from "../components"
+import { Form, SelectField, Field, FieldGroup } from "../react-native-fieldsX"
 import { connectprops, PropMap } from "react-redux-propmap"
 import { TopicActions } from "../state/actions"
 import Styles, { Color, Dims } from "../styles"
@@ -19,9 +19,10 @@ export default class TopicAddScreen extends Component {
 
   static navigationOptions = {
     title: "Choose Type",
-    header: (navigation, defaultHeader) => ({
+    header: ({state}, defaultHeader) => ({
       ...defaultHeader,
-      backTitle: " "
+      backTitle: " ",
+      //left: <ToolbarButton name="close" onPress={() => state.params.leftClick()} />,
     })
   }
 
@@ -29,10 +30,16 @@ export default class TopicAddScreen extends Component {
     super(props);
   }
 
+  componentDidMount() {
+    this.props.navigation.setParams({
+      leftClick: () => this._cancel()
+    });
+  }
+
   render() {
     const { navigate, goBack } = this.props.navigation;
     return (
-      <View style={Styles.screenFields}>
+      <ScrollView style={Styles.screenFields}>
 
         <StatusBar barStyle="dark-content" />
         { this.props.updateError && <ErrorHeader text={this.props.updateError} /> }
@@ -41,15 +48,20 @@ export default class TopicAddScreen extends Component {
           ref="form">
         
           <FieldGroup>
-            {/*<TouchableField text="Announcement" icon="flag" accessory={true} onPress={() => this._saveType()} />*/}
             <SelectField text="Announcement" icon="volume-2" accessory={true} onPress={() => this._saveType("announcement")} />
             <SelectField text="Event" icon="calendar" accessory={true} onPress={() => this._saveType("event")} />
+            {/*<SelectField text="Poll" icon="like" accessory={true} onPress={() => this._saveType("poll")} />*/}
           </FieldGroup>
 
         </Form>
 
-      </View>
+      </ScrollView>
     )
+  }
+
+  _cancel() {
+    Keyboard.dismiss()
+    this.props.navigation.goBack(null)
   }
 
   async _saveType(type) {

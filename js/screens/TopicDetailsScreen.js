@@ -1,6 +1,6 @@
 
 import React, { Component } from "react"
-import { StyleSheet, View, Text, Button, Animated, ActivityIndicator, Image, TouchableOpacity } from "react-native"
+import { StyleSheet, View, Text, Button, Animated, ActivityIndicator, Image, TouchableOpacity, TouchableHighlight } from "react-native"
 import { ToolbarButton, AvatarImage, ErrorHeader, WorkingOverlay, TopicImage, AnimatedModal, Toolbar } from "../components"
 import { connectprops, PropMap } from "react-redux-propmap"
 import { Field, FieldGroup, TouchableField, DescriptionField } from "../react-native-fieldsX"
@@ -10,9 +10,54 @@ import Styles, { Color, Dims, TextSize } from "../styles"
 
 import ActionSheet from "react-native-actionsheet"
 
+import SimpleLineIcon from "react-native-vector-icons/SimpleLineIcons"
+
 // event
 import Datetime from "../lib/datetime"
 import MapView from "react-native-maps"
+
+// fields
+class TopicDetailGroup extends Component {
+  render() {
+    let title = null;
+    if (this.props.title) {
+      title = (
+        <View>
+          <Text style={{color:"#777"}}>{this.props.title.toUpperCase()}</Text>
+        </View>
+      )
+    }
+    return (
+      <View style={{paddingHorizontal: 15,paddingVertical: 15,borderTopWidth: 0, backgroundColor: Color.white}}>
+        {title}
+        {this.props.children}
+      </View>
+    )
+  }
+}
+
+class TopicDetailField extends Component {
+  render() {
+    let title = null;
+    if (this.props.title) {
+      title = (
+        <View>
+          <Text style={{color:"#777"}}>{this.props.title.toUpperCase()}</Text>
+        </View>
+      )
+    }
+    return (
+      <View style={{flex:1,flexDirection:"row",marginBottom:5,marginTop:5}}>
+        <SimpleLineIcon name={this.props.icon} size={16} color={Color.subtle} style={{marginRight: 10,marginTop:2}} />
+        <View style={{flex:1}}>
+          <Text style={{color:"#555",fontSize:TextSize.normal}}>{this.props.text}</Text>
+          {this.props.subtext && <Text style={{color:"#999",fontSize:TextSize.tiny}}>{this.props.subtext}</Text>}
+        </View>
+      </View>
+    )
+  }
+}
+
 
 class Props extends PropMap {
   map(props) {
@@ -63,6 +108,18 @@ export default class TopicDetailsScreen extends Component {
       )
     }
 
+    let descr = null
+    if (topic.description) {
+      descr = (
+        <View>
+          <TopicDetailGroup>
+            <Text style={{fontSize:TextSize.small,color:"#555"}}>{topic.description}</Text>
+          </TopicDetailGroup>
+          <View style={styles.gutter} />
+        </View>
+      )
+    }
+
     return (
       <View style={Styles.screen}>
 
@@ -89,10 +146,12 @@ export default class TopicDetailsScreen extends Component {
             {this._renderHeader()}
             <View style={styles.contentContainerStyle}>
 
-              {topic.description &&
-              <DescriptionField text={topic.description} style={{paddingVertical:25,borderBottomWidth:StyleSheet.hairlineWidth,borderBottomColor:Color.separator,borderTopWidth:0}} />}
+              <View style={styles.gutter} />
+
+              {descr}
 
               {this._renderDetails()}
+
               {this._renderMembers()}
 
             </View>
@@ -126,15 +185,15 @@ export default class TopicDetailsScreen extends Component {
     const { navigate } = this.props.navigation;
 
     return (
-      <FieldGroup title="Members">
-        <TouchableField onPress={() => {navigate("TopicMembers")}} accessory={true} style={{paddingVertical:6}}>
+      <TopicDetailGroup title="Members">
+        <TouchableHighlight onPress={() => {navigate("TopicMembers")}} accessory={true} style={{paddingVertical:6}}>
           <View style={{flexDirection:"row", minHeight:35}}>
             { isLoadingMembers
               ? <ActivityIndicator />
               : members.valueSeq().map((member, i) => this._renderMemberAvatar(member, i)) }
           </View>
-        </TouchableField>
-      </FieldGroup>
+        </TouchableHighlight>
+      </TopicDetailGroup>
     )
   }
 
@@ -163,9 +222,14 @@ export default class TopicDetailsScreen extends Component {
 
     let image = null;
     if (topic.image && topic.image.valid) {
-      image = (<TouchableOpacity onPress={() => this._showPhotoViewer(true)}>
+      image = (<TouchableOpacity onPress={() => this._showPhotoViewer(true)} activeOpacity={0.9}>
         <TopicImage style={styles.image} image={topic.image} />
       </TouchableOpacity>)
+    }
+
+    let captionFontSize = 22;
+    if (image) {
+      captionFontSize = TextSize.normal;
     }
 
     return (
@@ -176,10 +240,10 @@ export default class TopicDetailsScreen extends Component {
         <Animated.View 
           style={[styles.header]}>
           <Animated.View 
-            style={[styles.caption, {transform: [{translateY: bottomTranslateY}]/*, opacity: infoOpacity*/}]}>
+            style={[styles.caption, {transform: [{translateY: bottomTranslateY}]}]}>
             {image}
             <View style={styles.captionFrame}>
-              <Text style={styles.captionTitle}>{topic.name}</Text>
+              <Text style={[styles.captionTitle, {fontSize: captionFontSize}]}>{topic.name}</Text>
               <View style={styles.ownerContainer}>
                 <AvatarImage user={topic.owner} size={20} background="dark" style={styles.ownerAvatar} />
                 <Text style={styles.owner}>{topic.owner.alias}</Text>
@@ -224,9 +288,15 @@ export default class TopicDetailsScreen extends Component {
       topic.details.map((detail, i) => {
         if (detail.type == "event") {
           children.push(this._renderEvent(detail, detail.type + i))
+          children.push(<View key={detail.type + i + "gutter"} style={styles.gutter} />)
         }
         else {
-          children.push(<Field key={detail.type + i} text={detail.title} />)
+          children.push(
+            <TopicDetailGroup key={detail.type + i}>
+              <Text style={{fontSize: TextSize.normal}}>{detail.title}</Text>
+            </TopicDetailGroup>
+          )
+          children.push(<View key={detail.type + i + "gutter"} style={styles.gutter} />)
         }
       });
     }
@@ -246,7 +316,7 @@ export default class TopicDetailsScreen extends Component {
     let end = Datetime(detail.endDate);
     let when = "";
     if (detail.allDay == true) {
-      when = "All-Day: "
+      when = ""
       if (start.isSame(end, "day"))
         when += start.format("LL")
       else
@@ -258,14 +328,15 @@ export default class TopicDetailsScreen extends Component {
       else
         when += start.format("LLL") + " to " + end.format("LLL")
     }
+    if (when) when = when.replace(/:00/g, "")
+    if (when) when = when.replace(" " + new Date().getFullYear(), "")
 
     let where = null;
     if (detail.location) {
       where = (
-        <FieldGroup title="Where" key={key}>
-          <Field text={detail.location.name} />
-          <DescriptionField text={detail.location.address} />
-          <Field style={styles.mapContainer}>
+        <View key={key}>
+          <TopicDetailField text={detail.location.name} subtext={detail.location.address} icon="location-pin" />
+          <View style={styles.mapContainer}>
             <MapView
               style={styles.map}
               scrollEnabled={false}
@@ -288,24 +359,24 @@ export default class TopicDetailsScreen extends Component {
                 description={detail.location.address}
               />
             </MapView>
-          </Field>
-        </FieldGroup>
+          </View>
+        </View>
       )
     }
-    else if (detail.locationName != "") {
+    else if (detail.locationName && detail.locationName != "") {
       where = (
-        <FieldGroup title="Where" key={key}>
-          <Field text={detail.locationName} />
-        </FieldGroup>
+        <View title="Where" key={key}>
+          <TopicDetailField text={detail.locationName} icon="location-pin" />
+        </View>
       )
     }
 
     return (
       <View key={key}>
-        <FieldGroup title="When">
-          <Field text={when} />
-        </FieldGroup>
-        {where}
+        <TopicDetailGroup>
+          <TopicDetailField text={when} icon="clock" />
+          {where}
+        </TopicDetailGroup>
       </View>
     )
   }
@@ -347,13 +418,13 @@ let styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: Layout.window.height,
-    backgroundColor: "#fff" //Color.tint,
+    backgroundColor: "#fff"
   },
   header: {
-    backgroundColor: "#fff", //Color.tint,
+    backgroundColor: "#fff",
     paddingTop: 0,
     paddingBottom: 20,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    //borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: Color.separator
   },
   contentContainerStyle: {
@@ -372,7 +443,6 @@ let styles = StyleSheet.create({
   },
   captionTitle: {
     color: "#000",
-    fontSize: TextSize.normal,
     fontWeight: "500"
   },
   ownerContainer: {
@@ -410,18 +480,29 @@ let styles = StyleSheet.create({
     fontWeight: "600",
     color: Color.white
   },
-
+  gutter: {
+    height: 8,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: Color.separator,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: Color.separator,
+    backgroundColor: "rgb(248, 247, 250)"
+  },
 
 
   // event
   mapContainer: {
-    height: 130
+    height: 130,
+    marginTop: 16,
+    marginBottom: 8,
+    borderColor: Color.subtle,
+    borderRadius: 4
   },
   map: {
     position: "absolute",
     top: 0,
     left: 0,
     right: 0,
-    height: 130,
+    height: 130
   }
 })

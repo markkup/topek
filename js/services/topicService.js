@@ -1,13 +1,31 @@
 import Parse from "parse/react-native"
 import { InteractionManager } from "react-native"
-import { TopicMap, Topic, UserMap, Error } from "../models"
+import { TopicMap, Topic, TopicStateMap, TopicState, UserMap, Error } from "../models"
 import * as Utils from "../lib/utils"
 
 const ParseOrg = Parse.Object.extend("Org");
 const ParseTopic = Parse.Object.extend("Topic");
+const ParseTopicState = Parse.Object.extend("TopicState");
 const ParseUser = Parse.Object.extend("User");
 
 class TopicService {
+
+  async loadState(userId) {
+
+    await InteractionManager.runAfterInteractions();
+    
+    try {
+
+      let query = new Parse.Query("TopicState")
+        .equalTo("userId", userId);
+
+      const data = await query.find();
+      return TopicStateMap.fromParse(data);
+    }
+    catch (e) {
+      throw Error.fromException(e)
+    }
+  }
 
   async load(orgId) {
 
@@ -110,7 +128,6 @@ class TopicService {
     catch (e) {
       throw Error.fromException(e)
     }
-
   }
 
   async addMembers(topicId, membersMap) {
@@ -135,7 +152,6 @@ class TopicService {
     catch (e) {
       throw Error.fromException(e)
     }
-
   }
 
   async removeMember(topicId, member) {
@@ -158,7 +174,49 @@ class TopicService {
     catch (e) {
       throw Error.fromException(e)
     }
+  }
 
+  async getTopicState(userId, topicId) {
+
+    await InteractionManager.runAfterInteractions();
+
+    try {
+
+      let query = new Parse.Query("TopicState")
+        .equalTo("userId", userId)
+        .equalTo("topicId", topicId);
+
+      let topicStates = await query.find();
+      if (topicStates && topicStates.length > 0) {
+        return topicStates[0];
+      }
+      return null;
+    }
+    catch (e) {
+      throw Error.fromException(e)
+    }
+  }
+
+  async markRead(userId, topicId, read) {
+
+    await InteractionManager.runAfterInteractions();
+
+    try {
+
+      let topicState = await this.getTopicState(userId, topicId);
+      if (!topicState) {
+        topicState = new ParseTopicState();
+        topicState.set("userId", userId);
+        topicState.set("topicId", topicId);
+      }
+      topicState.set("read", read);
+
+      const result = await topicState.save();
+      return TopicState.fromParse(result);
+    }
+    catch (e) {
+      throw Error.fromException(e)
+    }
   }
 
 }
