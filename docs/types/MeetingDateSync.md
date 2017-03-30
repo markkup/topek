@@ -10,6 +10,15 @@ Description
 -----------
 An admin will be able to create a meeting response request which will include a number of meeting dates/times for users to select one or more suitable times.  Users will be able to see if others have responded and include their responses for suitable dates/times.  The admin will then use that information to create an event.
 
+Action Item Behavior
+--------------------
+1. An Action Item should be added that indicates that the user needs to respond to the meeting date request.
+2. The Action Item will be removed once the user responds to the meeting date request.
+
+Calendar Behavior
+-----------------
+1. There are no calendar items for a meeting date request.
+
 Requirements
 ------------
 1. Admin should be able to create a MeetingDateRequest topic.

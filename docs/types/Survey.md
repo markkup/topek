@@ -11,6 +11,15 @@ Description
 -----------
 The admin will be able to create the survey using basic tools.  The surveys will consist of one or more questions and will be defined by choosing question types.
 
+Action Item Behavior
+--------------------
+1. If the admin indicates that the survey is required, then the survey request appears on the Action Item list.
+2. The Action Item is removed once the survey has been completed.
+
+Calendar Behavior
+-----------------
+1. If a due date in set for the survey, the survey is added to the calendar.
+
 Requirements
 ------------
 1. Admin should be able to create a survey topic.
@@ -21,6 +30,8 @@ Requirements
 6. Admin should be able to create multiple questions per page or multi-page surveys (most likely just multi-page surveys to start)
 7. Admin should be able to see the results of the survey.
 8. Admin should be able to allow users to see the results of the survey (maybe).
+9. Admin should be able to indicate that the survey is required to be completed by the users.
+10. Admin should be able to put a due date for completing the survey.
 
 Limitations
 -----------
