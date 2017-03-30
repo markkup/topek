@@ -22,27 +22,6 @@ export default {
     // initialize push
     console.log("Push initialized")
     PushService.initialize(dispatch);
-  },
-
-  setupLiveQueries: (dispatch) => {
-
-    let queryTopic = new Parse.Query("Topic").include("owner").include("members").descending("updatedAt");
-    let subscriptionTopic = queryTopic.subscribe();
-    
-    subscriptionTopic.on("create", (topic) => {
-      console.log("LiveQuery(Topic) dispatch TOPICS_ADD_SUCCESS: ", topic);
-      dispatch({type: Types.TOPICS_ADD_SUCCESS, payload: Topic.fromParse(topic)});
-    });
-
-    subscriptionTopic.on("update", (topic) => {
-      console.log("LiveQuery(Topic) dispatch TOPICS_UPDATE_SUCCESS: ", topic);
-      dispatch({type: Types.TOPICS_UPDATE_SUCCESS, payload: Topic.fromParse(topic)});
-    });
-
-    subscriptionTopic.on("delete", (topic) => {
-      console.log("LiveQuery(Topic) dispatch TOPICS_REMOVE_SUCCESS: ", topic);
-      dispatch({type: Types.TOPICS_REMOVE_SUCCESS, payload: topic.id});
-    });
-
   }
+  
 }

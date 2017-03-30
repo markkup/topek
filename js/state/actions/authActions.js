@@ -31,7 +31,13 @@ export function login(username, password) {
 }
 
 export function logout() {
-  return {type: Types.LOGOUT_SUCCESS}
+  return async dispatch => {
+    
+    // let's un-init our app
+    dispatch(AppActions.uninitialize());
+
+    dispatch({type: Types.LOGOUT_SUCCESS});
+  }
 }
 
 export function requestPushPermissions() {

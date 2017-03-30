@@ -2,11 +2,30 @@ import Parse from "parse/react-native"
 import { InteractionManager } from "react-native"
 import { TopicMap, Topic, TopicStateMap, TopicState, UserMap, Error } from "../models"
 import * as Utils from "../lib/utils"
+import LiveQueryWatcher from "../lib/LiveQueryWatcher"
 
 const ParseOrg = Parse.Object.extend("Org");
 const ParseTopic = Parse.Object.extend("Topic");
 const ParseTopicState = Parse.Object.extend("TopicState");
 const ParseUser = Parse.Object.extend("User");
+
+class LiveTopicWatcher extends LiveQueryWatcher {
+  getQuery(className) {
+    return new Parse.Query(className).include("owner").include("members");
+  }
+  getPayload(type, obj) {
+    return Topic.fromParse(obj);
+  }
+}
+
+class LiveTopicStateWatcher extends LiveQueryWatcher {
+  getQuery(className) {
+    return new Parse.Query(className).equalTo("userId", this.options.userId);
+  }
+  getPayload(type, obj) {
+    return TopicState.fromParse(obj);
+  }
+}
 
 class TopicService {
 
@@ -217,6 +236,16 @@ class TopicService {
     catch (e) {
       throw Error.fromException(e)
     }
+  }
+
+  addTopicWatch(dispatch, actionMap) {
+    return new LiveTopicWatcher(dispatch, "Topic", actionMap);
+  }
+
+  addTopicStateWatch(dispatch, actionMap, userId) {
+    return new LiveTopicStateWatcher(dispatch, "TopicState", actionMap, {
+      userId: userId
+    });
   }
 
 }

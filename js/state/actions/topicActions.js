@@ -197,3 +197,41 @@ export function updateMembersInNewTopic(members) {
     dispatch({type: Types.TOPICS_NEW_TOPIC_UPDATE_MEMBERS, payload: members});
   }
 }
+
+let topicWatch = null;
+let topicStateWatch = null;
+
+export function setupWatchers() {
+  return async (dispatch, getState) => {
+    
+    const state = getState();
+
+    topicWatch = topicService.addTopicWatch(dispatch, {
+      "create": Types.TOPICS_ADD_SUCCESS,
+      "update": Types.TOPICS_UPDATE_SUCCESS,
+      "delete": Types.TOPICS_REMOVE_SUCCESS
+    })
+
+    topicStateWatch = topicService.addTopicStateWatch(dispatch, {
+      "create": Types.TOPICS_STATE_ADD_SUCCESS,
+      "update": Types.TOPICS_STATE_UPDATE_SUCCESS
+    }, state.profile.user.id)
+
+  }
+} 
+
+export function closeWatchers() {
+  return async (dispatch, getState) => {
+    
+    if (topicWatch != null) {
+      topicWatch.close();
+      topicWatch = null;
+    }
+
+    if (topicStateWatch != null) {
+      topicStateWatch.close();
+      topicStateWatch = null;
+    }
+
+  }
+} 

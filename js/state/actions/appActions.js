@@ -1,6 +1,5 @@
 import * as Types from "../types"
-import * as orgActions from "./orgActions"
-import * as prefsActions from "./prefsActions"
+import { OrgActions, PrefsActions, TopicActions } from "."
 import { Error } from "../../models"
 
 export function initialize() {
@@ -11,22 +10,35 @@ export function initialize() {
       return false;
     }
 
+    // initialize orgs
     await dispatch(initializeOrgs());
 
+    // setup our watchers
+    await dispatch(TopicActions.setupWatchers());
+
     return true;
+  }
+}
+
+export function uninitialize() {
+  return async (dispatch, getState) => {
+
+    // setup our watchers
+    await dispatch(TopicActions.closeWatchers());
+
   }
 }
 
 function initializeOrgs() {
   return async (dispatch, getState) => {
 
-    await dispatch(orgActions.load());
+    await dispatch(OrgActions.load());
 
     const state = getState();
     let org = state.prefs.org;
     if ((!org || !org.id) && (state.orgs.list && state.orgs.list.size > 0)) {
       org = state.orgs.list.first()
     }
-    await dispatch(prefsActions.setOrg(org));
+    await dispatch(PrefsActions.setOrg(org));
   }
 }
