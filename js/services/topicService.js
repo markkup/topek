@@ -238,6 +238,28 @@ class TopicService {
     }
   }
 
+  async markDismissed(userId, topicId, dismissed) {
+
+    await InteractionManager.runAfterInteractions();
+
+    try {
+
+      let topicState = await this.getTopicState(userId, topicId);
+      if (!topicState) {
+        topicState = new ParseTopicState();
+        topicState.set("userId", userId);
+        topicState.set("topicId", topicId);
+      }
+      topicState.set("dismissed", dismissed);
+
+      const result = await topicState.save();
+      return TopicState.fromParse(result);
+    }
+    catch (e) {
+      throw Error.fromException(e)
+    }
+  }
+
   addTopicWatch(dispatch, actionMap) {
     return new LiveTopicWatcher(dispatch, "Topic", actionMap);
   }

@@ -131,12 +131,39 @@ export function removeMembersfromSelectedTopic(member) {
 export function markSelectedTopicAsRead(read) {
   return async (dispatch, getState) => {
     try {
-
       const state = getState();
       if (!state.topics.selectedTopic)
         throw "No topic has been selected"
 
+      dispatch({type: Types.TOPICS_STATE_DISMISS, payload: {
+        topicId: state.topics.selectedTopic.id,
+        prop: "read",
+        value: read
+      }});
+
       var results = await topicService.markRead(state.profile.user.id, state.topics.selectedTopic.id, read);
+      dispatch({type: Types.TOPICS_STATE_UPDATE_SUCCESS, payload: results});
+      return true;
+    }
+    catch (e) {
+      dispatch({type: Types.TOPICS_UPDATE_FAILURE, payload: Error.fromException(e)});
+    }
+    return false;
+  }
+}
+
+export function dismissTopic(topicId, dismissed) {
+  return async (dispatch, getState) => {
+    try {
+      const state = getState();
+
+      dispatch({type: Types.TOPICS_STATE_DISMISS, payload: {
+        topicId: topicId,
+        prop: "dismissed",
+        value: dismissed
+      }});
+
+      var results = await topicService.markDismissed(state.profile.user.id, topicId, dismissed);
       dispatch({type: Types.TOPICS_STATE_UPDATE_SUCCESS, payload: results});
       return true;
     }

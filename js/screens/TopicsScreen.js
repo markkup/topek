@@ -1,5 +1,6 @@
 import React, { Component } from "react"
-import { StyleSheet, View, Text, TextInput, Button, ListView, TouchableHighlight, TouchableOpacity, RefreshControl } from "react-native"
+import { StyleSheet, View, Text, TextInput, Button, ListView, 
+        TouchableHighlight, TouchableOpacity, RefreshControl, InteractionManager } from "react-native"
 import { ErrorHeader, Toolbar, ToolbarButton, ToolbarButtonExample, Header, AvatarImage, TopicImage } from "../components"
 import Immutable from "immutable"
 import Datetime from "../lib/datetime"
@@ -8,7 +9,7 @@ import { TopicActions } from "../state/actions"
 import Styles, { Color, Dims, TextSize } from "../styles"
 
 import { TopicSelectors } from "../state/selectors"
-
+import { SwipeListView } from "react-native-swipe-list-view"
 import IonIcon from "react-native-vector-icons/Ionicons"
 import SimpleLineIcon from "react-native-vector-icons/SimpleLineIcons"
 
@@ -23,6 +24,7 @@ class Props extends PropMap {
     props.refreshTopics = this.bindEvent(TopicActions.load);
     props.topicSelect = this.bindEvent(TopicActions.setSelected);
     props.startNewTopic = this.bindEvent(TopicActions.startNewTopic);
+    props.dismissTopic = this.bindEvent(TopicActions.dismissTopic);
   }
 }
 
@@ -78,7 +80,7 @@ export default class TopicsScreen extends Component {
         {header}
         {example}
         { this.props.loadError && <ErrorHeader text={this.props.loadError} /> }
-        <ListView
+        <SwipeListView
           dataSource={this.state.dataSource}
           renderRow={this._renderRow.bind(this)}
           enableEmptySections={true}
@@ -89,6 +91,18 @@ export default class TopicsScreen extends Component {
               onRefresh={this.props.refreshTopics}
             />
           }
+          renderHiddenRow={(data, secId, rowId, rowMap) => (
+            <View style={styles.rowBack}>
+              <TouchableOpacity 
+                style={[styles.backRightBtn, styles.backRightBtnRight]} 
+                onPress={() => this._handleHideClick(data, secId, rowId, rowMap)}>
+                <Text style={styles.backTextWhite}>Dismiss</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          disableRightSwipe={true}
+          rightOpenValue={-75}
+          closeOnRowBeginSwipe={true}
         />
       </View>
     )
@@ -219,6 +233,13 @@ export default class TopicsScreen extends Component {
       />
     );
   }
+
+  async _handleHideClick(rowData, secId, rowId, rowMap) {
+    rowMap[`${secId}${rowId}`].closeRow();
+    await InteractionManager.runAfterInteractions();
+    //setTimeout(() => {this.props.dismissTopic(rowData.topic.id, true), 500});
+    this.props.dismissTopic(rowData.topic.id, true)
+  }
 }
 
 let styles = StyleSheet.create({
@@ -305,5 +326,28 @@ let styles = StyleSheet.create({
     marginRight: 11,
     marginTop: 7,
     fontSize: 16
-  }
+  },
+	rowBack: {
+		alignItems: 'center',
+		backgroundColor: '#DDD',
+		flex: 1,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		paddingLeft: 15,
+	},
+	backRightBtn: {
+		alignItems: 'center',
+		bottom: 0,
+		justifyContent: 'center',
+		position: 'absolute',
+		top: 0,
+		width: 75
+	},
+	backRightBtnRight: {
+		backgroundColor: Color.blue,
+		right: 0
+	},
+  backTextWhite: {
+		color: '#FFF'
+	}
 })

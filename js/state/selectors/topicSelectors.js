@@ -10,14 +10,18 @@ export const getTopicList = createSelector(
     let resMap = new Immutable.OrderedMap().withMutations(res => {
       topics.map(topic => {
         let read = false
+        let dismissed = false
         let state = topicStates.get(topic.id)
         if (state) {
           read = state.read
+          dismissed = state.dismissed
         }
-        res.set(topic.id, {
-          topic: topic,
-          read: read
-        })
+        if (!dismissed) {
+          res.set(topic.id, {
+            topic: topic,
+            read: read
+          })
+        }
       })
     })
     return resMap

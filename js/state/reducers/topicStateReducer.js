@@ -30,6 +30,15 @@ export default function(state = initialState, action = {}) {
       return state;
     }
 
+    case Types.TOPICS_STATE_DISMISS: {
+      const { topicId, prop, value } = action.payload;
+      let topicState = state.list.get(topicId)
+      if (topicState) {
+        state = state.set("list", state.list.set(topicState.topicId, topicState.set(prop, value)))
+      }
+      return state;
+    }
+
     case Types.TOPICS_STATE_UPDATE_SUCCESS: {
       const topicState = action.payload;
       state = state.set("list", state.list.set(topicState.topicId, topicState))
