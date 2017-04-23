@@ -182,6 +182,9 @@ export default class TopicsScreen extends Component {
     else if (topic.type == "announcement") {
       icon = <SimpleLineIcon name="volume-2" size={18} style={styles.icon} />
     }
+    else if (topic.type == "poll") {
+      icon = <SimpleLineIcon name="question" size={18} style={styles.icon} />
+    }
     else {
       icon = <SimpleLineIcon name="info" size={18} style={styles.icon} />
     }
@@ -276,11 +279,10 @@ let styles = StyleSheet.create({
     marginTop: 2
   },
   dot: {
-    fontWeight: "500",
     color: Color.subtle,
-    fontSize: TextSize.tiny,
+    fontSize: 9,
     marginLeft: 4,
-    marginTop: 2
+    marginTop: 4
   },
   members: {
     fontWeight: "500",
