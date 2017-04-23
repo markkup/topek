@@ -20,7 +20,7 @@ export default class ToolbarButton extends Component {
         break;
       }
       case "add": {
-        icon = (<IonIcon name="ios-add" size={44} color={this.props.tint} style={[styles.icon, {marginTop:-2,paddingTop:0,height:40}, this.props.styleImage]} />);
+        icon = (<IonIcon name="ios-add" size={40} color={this.props.tint} style={[styles.icon, {marginTop:0,marginLeft:0,paddingTop:0,height:40}, this.props.styleImage]} />);
         break;
       }
       case "more":

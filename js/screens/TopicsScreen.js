@@ -73,7 +73,7 @@ export default class TopicsScreen extends Component {
       </View>
     )
 
-    let example = null //<ToolbarButtonExample />
+    let example = null; //<ToolbarButtonExample />
 
     return (
       <View style={Styles.screenFields}>
