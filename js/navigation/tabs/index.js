@@ -31,7 +31,7 @@ const tabsOptions = {
 }
 
 export default TabNavigator({
-  Topics: { screen: TopicsTab, navigationOptions: { tabBar: { label: "Topics", icon: (props) => (<TabIcon {...props} icon="filing" />) }}},
+  Topics: { screen: TopicsTab, navigationOptions: { tabBar: { label: "Topics", icon: (props) => (<TabIcon {...props} icon="paper" />) }}},
   /*Calendar: { screen: CalendarTab, navigationOptions: { tabBar: { label: "Calendar", icon: (props) => (<TabIcon {...props} icon="calendar" />) }}},*/
   Activity: { screen: ActivityTab, navigationOptions: { tabBar: { label: "Alerts", icon: (props) => (<TabIcon {...props} icon="pulse" />) }}},
   Tasks: { screen: TasksTab, navigationOptions: { tabBar: { label: "You", icon: (props) => (<TabIcon {...props} icon="contact" />) }}},
