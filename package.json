@@ -29,6 +29,7 @@
     "react-native-push-notification": "^2.2.1",
     "react-native-radio-buttons": "^0.14.0",
     "react-native-root-modal": "^1.1.0",
+    "react-native-scrollable-tab-view": "^0.6.5",
     "react-native-search-box": "^0.0.3",
     "react-native-sortable-listview": "^0.2.2",
     "react-native-swipe-list-view": "^0.4.1",
