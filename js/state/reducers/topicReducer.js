@@ -7,10 +7,7 @@ const isPersistable = true;
 const TopicState = Immutable.Record({
   list: new TopicMap(),
   selectedTopic: null,
-  selectedTopicMembers: new UserMap(),
   newTopic: null,
-  newTopicMembers: new UserMap(),
-  isLoadingMembers: false,
   isRefreshing: false,
   isUpdating: false,
   loadError: null,
@@ -32,8 +29,6 @@ export default function(state = initialState, action = {}) {
             .set("isRefreshing", false)
             .set("loadError", null)
             .set("selectedTopic", null)
-            .set("selectedTopicMembers", new UserMap())
-            .set("isLoadingMembers", false)
         }
         else state = new TopicState();
       }
@@ -105,7 +100,6 @@ export default function(state = initialState, action = {}) {
         .set("updateError", null)
       if (state.selectedTopic && state.selectedTopic.id == topicId) {
         state = state.set("selectedTopic", null)
-          .set("selectedTopicMembers", new UserMap())
       }
       return state;
     }
@@ -120,32 +114,16 @@ export default function(state = initialState, action = {}) {
     case Types.TOPICS_SELECT_TOPIC: {
       const topic = action.payload;
       state = state.set("selectedTopic", topic)
-        .set("selectedTopicMembers", new UserMap())
-        .set("isLoadingMembers", true)
-      return state;
-    }
-
-    case Types.TOPICS_SELECT_TOPIC_MEMBERS_REQUEST: {
-      state = state.set("isLoadingMembers", true)
-      return state;
-    }
-
-    case Types.TOPICS_SELECT_TOPIC_MEMBERS_SUCCESS: {
-      const members = action.payload;
-      state = state.set("selectedTopicMembers", members)
-        .set("isLoadingMembers", false)
       return state;
     }
 
     case Types.TOPICS_NEW_TOPIC_START: {
       state = state.set("newTopic", new Topic())
-        .set("newTopicMembers", new UserMap())
       return state;
     }
 
     case Types.TOPICS_NEW_TOPIC_RESET: {
       state = state.set("newTopic", null)
-        .set("newTopicMembers", new UserMap())
       return state;
     }
 
@@ -157,12 +135,6 @@ export default function(state = initialState, action = {}) {
       else {
         state = state.setIn(["newTopic", "details"], Immutable.List([value]))
       }
-      return state;
-    }
-
-    case Types.TOPICS_NEW_TOPIC_UPDATE_MEMBERS: {
-      const members = action.payload;
-      state = state.set("newTopicMembers", members)
       return state;
     }
 

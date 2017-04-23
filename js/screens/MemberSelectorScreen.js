@@ -3,17 +3,17 @@ import { StyleSheet, View, StatusBar } from "react-native"
 import { ToolbarTextButton, UserSelectListView } from "../components"
 import { connectprops, PropMap } from "react-redux-propmap"
 import { UserMap } from "../models"
-import Styles, { Color, Dims, TextSize } from "../styles"
-
 import { TopicActions } from "../state/actions"
+import { TopicSelectors } from "../state/selectors"
+import Styles, { Color, Dims, TextSize } from "../styles"
 
 class Props extends PropMap {
   map(props) {
-    props.members = this.state.members.list;
+    props.topic = TopicSelectors.getCurrentTopic(this.state);
+    props.orgMembers = this.state.members.list;
     props.orgOwner = this.state.prefs.org.owner;
     props.currentUser = this.state.profile.user;
-    props.topicMembers = this.state.topics.selectedTopicMembers;
-    props.isWorking = this.state.topics.isLoadingMembers;
+    props.isWorking = false;
     props.saveClicked = this.bindEvent(TopicActions.addMembersToSelectedTopic);
   }
 }
@@ -45,13 +45,13 @@ export default class MemberSelectorScreen extends Component {
   }
 
   render() {
-    const { members, orgOwner, currentUser } = this.props;
+    const { topic, orgMembers, orgOwner, currentUser } = this.props;
 
     // compile list of potential members
-    // all members + owner - current user - existing users
-    let users = members.set(orgOwner.id, orgOwner).delete(currentUser.id);
-    this.props.topicMembers.map(member => {
-      users = users.delete(member.id)
+    // all members - owner - existing users
+    let users = orgMembers.delete(currentUser.id);
+    this.props.topic.memberIds.map(id => {
+      users = users.delete(id)
     })
 
     return (
@@ -72,7 +72,8 @@ export default class MemberSelectorScreen extends Component {
 
   async _saveMembers() {
     this.props.navigation.setParams({working: true});
-    await this.props.saveClicked(this.membersToAdd);
+    let memberIds = this.membersToAdd.map(m => m.id).toArray();
+    await this.props.saveClicked(memberIds);
     this.props.navigation.goBack(null);
   }
 

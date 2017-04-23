@@ -33,8 +33,9 @@ platform :ios do
     gym(scheme: "topek",
       clean: true,
       project: "./ios/topek.xcodeproj",
-      configuration: "ReleaseAdhoc",
-      use_legacy_build_api: true)
+      configuration: "ReleaseAdHoc",
+      include_bitcode: false,
+      export_method: "ad-hoc")
     hockey(api_token: "59e931660b6041908f0a6d160282439d")
     slack(message: "Successfully deployed new ios beta app to HockeyApp.")
   end

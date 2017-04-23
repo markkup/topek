@@ -1,4 +1,5 @@
 import * as Types from "../types"
+import State from ".." 
 import { OrgActions, PrefsActions, TopicActions } from "."
 import { Error } from "../../models"
 
@@ -23,8 +24,11 @@ export function initialize() {
 export function uninitialize() {
   return async (dispatch, getState) => {
 
-    // setup our watchers
+    // close our watchers
     await dispatch(TopicActions.closeWatchers());
+
+    // purge our data
+    State.purgePersistedState();
 
   }
 }

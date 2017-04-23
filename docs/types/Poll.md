@@ -40,7 +40,21 @@ Structure
 ---------
 ```
 {
+  type: "poll",
+  question: string,
+  answers: string [],
+  publicResults: bool,
+  required: bool,
+  expires: date,
+}
+```
 
+Result
+------
+```
+{
+  type: "poll",
+  selected: int
 }
 ```
 

@@ -21,7 +21,7 @@ const tabsOptions = {
         showIcon: true,
         showLabel: false,
         style: {
-          backgroundColor: "#FFF",
+          backgroundColor: Color.backgroundFields,
         },
         indicatorStyle: {
           borderBottomColor: Color.tint
@@ -31,7 +31,7 @@ const tabsOptions = {
 }
 
 export default TabNavigator({
-  Topics: { screen: TopicsTab, navigationOptions: { tabBar: { label: "Topics", icon: (props) => (<TabIcon {...props} icon="analytics" />) }}},
+  Topics: { screen: TopicsTab, navigationOptions: { tabBar: { label: "Topics", icon: (props) => (<TabIcon {...props} icon="filing" />) }}},
   /*Calendar: { screen: CalendarTab, navigationOptions: { tabBar: { label: "Calendar", icon: (props) => (<TabIcon {...props} icon="calendar" />) }}},*/
   Activity: { screen: ActivityTab, navigationOptions: { tabBar: { label: "Alerts", icon: (props) => (<TabIcon {...props} icon="pulse" />) }}},
   Tasks: { screen: TasksTab, navigationOptions: { tabBar: { label: "You", icon: (props) => (<TabIcon {...props} icon="contact" />) }}},

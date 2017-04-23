@@ -1,5 +1,6 @@
 import * as Types from "../types"
 import Validate from "../../lib/validate"
+import MembersHelper from "../../lib/membersHelper"
 import { Error } from "../../models"
 import topicService from "../../services/topicService"
 
@@ -17,11 +18,11 @@ export function load(skipRequest = true) {
         throw "No current user set"
 
       // get topic state first
-      var states = await topicService.loadState(state.profile.user.id);
+      let states = await topicService.loadState(state.profile.user.id);
       dispatch({type: Types.TOPICS_STATE_LOAD_SUCCESS, payload: states});
 
       // now get topics
-      var topics = await topicService.load(state.prefs.org.id);
+      let topics = await topicService.load(state.prefs.org.id, state.profile.user.id);
       dispatch({type: Types.TOPICS_LOAD_SUCCESS, payload: topics});
     }
     catch (e) {
@@ -41,7 +42,7 @@ export function add(title) {
       if (!state.prefs.org)
         throw "No current org set"
 
-      var results = await topicService.add(state.prefs.org.id, title);
+      let results = await topicService.add(state.prefs.org.id, title);
       dispatch({type: Types.TOPICS_ADD_SUCCESS, payload: results});
       return true;
     }
@@ -57,7 +58,7 @@ export function destroy(id) {
     dispatch({type: Types.TOPICS_UPDATE_REQUEST});
     
     try {
-      var results = await topicService.destroy(id);
+      let results = await topicService.destroy(id);
       dispatch({type: Types.TOPICS_REMOVE_SUCCESS, payload: results});
       return true;
     }
@@ -70,25 +71,14 @@ export function destroy(id) {
 
 export function setSelected(topic) {
   return async (dispatch, getState) => {
-    await dispatch({type: Types.TOPICS_SELECT_TOPIC, payload: topic});
-    dispatch({type: Types.TOPICS_SELECT_TOPIC_MEMBERS_REQUEST});
+    dispatch({type: Types.TOPICS_SELECT_TOPIC, payload: topic});
     dispatch(markSelectedTopicAsRead(true));
-
-    try {
-      var results = await topicService.loadMembers(topic.id);
-      dispatch({type: Types.TOPICS_SELECT_TOPIC_MEMBERS_SUCCESS, payload: results});
-      return true;
-    }
-    catch (e) {
-      dispatch({type: Types.TOPICS_LOAD_FAILURE, payload: Error.fromException(e)});
-    }
-    return false;
   }
 }
 
-export function addMembersToSelectedTopic(members) {
+export function addMembersToSelectedTopic(memberIds) {
   return async (dispatch, getState) => {
-    dispatch({type: Types.TOPICS_SELECT_TOPIC_MEMBERS_REQUEST});
+    dispatch({type: Types.TOPICS_UPDATE_REQUEST});
     
     try {
 
@@ -96,8 +86,15 @@ export function addMembersToSelectedTopic(members) {
       if (!state.topics.selectedTopic)
         throw "No topic has been selected"
 
-      var results = await topicService.addMembers(state.topics.selectedTopic.id, members);
-      dispatch({type: Types.TOPICS_SELECT_TOPIC_MEMBERS_SUCCESS, payload: results});
+      let newMemberIds = MembersHelper.addMemberIds({
+        currentIds: state.topics.selectedTopic.memberIds,
+        addIds: memberIds,
+        orgMembers: state.members.list,
+        ownerId: state.topics.selectedTopic.owner.id
+      })
+
+      let results = await topicService.update(state.topics.selectedTopic.id, "memberIds", newMemberIds);
+      dispatch({type: Types.TOPICS_UPDATE_SUCCESS, payload: results});
       return true;
     }
     catch (e) {
@@ -107,9 +104,9 @@ export function addMembersToSelectedTopic(members) {
   }
 }
 
-export function removeMembersfromSelectedTopic(member) {
+export function removeMembersFromSelectedTopic(memberIds) {
   return async (dispatch, getState) => {
-    dispatch({type: Types.TOPICS_SELECT_TOPIC_MEMBERS_REQUEST});
+    dispatch({type: Types.TOPICS_UPDATE_REQUEST});
     
     try {
 
@@ -117,8 +114,14 @@ export function removeMembersfromSelectedTopic(member) {
       if (!state.topics.selectedTopic)
         throw "No topic has been selected"
 
-      var results = await topicService.removeMember(state.topics.selectedTopic.id, member);
-      dispatch({type: Types.TOPICS_SELECT_TOPIC_MEMBERS_SUCCESS, payload: results});
+      let newMemberIds = MembersHelper.removeMemberIds({
+        currentIds: state.topics.selectedTopic.memberIds,
+        removeIds: memberIds,
+        orgMembers: state.members.list
+      })
+
+      let results = await topicService.update(state.topics.selectedTopic.id, "memberIds", newMemberIds);
+      dispatch({type: Types.TOPICS_UPDATE_SUCCESS, payload: results});
       return true;
     }
     catch (e) {
@@ -130,45 +133,37 @@ export function removeMembersfromSelectedTopic(member) {
 
 export function markSelectedTopicAsRead(read) {
   return async (dispatch, getState) => {
-    try {
-      const state = getState();
-      if (!state.topics.selectedTopic)
-        throw "No topic has been selected"
+    const state = getState();
+    if (!state.topics.selectedTopic)
+      throw "No topic has been selected"
 
-      dispatch({type: Types.TOPICS_STATE_DISMISS, payload: {
-        topicId: state.topics.selectedTopic.id,
-        prop: "read",
-        value: read
-      }});
-
-      var results = await topicService.markRead(state.profile.user.id, state.topics.selectedTopic.id, read);
-      dispatch({type: Types.TOPICS_STATE_UPDATE_SUCCESS, payload: results});
-      return true;
-    }
-    catch (e) {
-      dispatch({type: Types.TOPICS_UPDATE_FAILURE, payload: Error.fromException(e)});
-    }
-    return false;
+    dispatch(updateTopicState(state.topics.selectedTopic.id, "read", read));
   }
 }
 
 export function dismissTopic(topicId, dismissed) {
   return async (dispatch, getState) => {
+    dispatch(updateTopicState(topicId, "dismissed", dismissed));
+  }
+}
+
+export function updateTopicState(topicId, prop, value) {
+  return async (dispatch, getState) => {
     try {
       const state = getState();
 
-      dispatch({type: Types.TOPICS_STATE_DISMISS, payload: {
+      dispatch({type: Types.TOPICS_STATE_UPDATE_REQUEST, payload: {
         topicId: topicId,
-        prop: "dismissed",
-        value: dismissed
+        prop: prop,
+        value: value
       }});
 
-      var results = await topicService.markDismissed(state.profile.user.id, topicId, dismissed);
+      let results = await topicService.updateState(state.profile.user.id, topicId, prop, value);
       dispatch({type: Types.TOPICS_STATE_UPDATE_SUCCESS, payload: results});
       return true;
     }
     catch (e) {
-      dispatch({type: Types.TOPICS_UPDATE_FAILURE, payload: Error.fromException(e)});
+      dispatch({type: Types.TOPICS_STATE_UPDATE_FAILURE, payload: Error.fromException(e)});
     }
     return false;
   }
@@ -196,12 +191,11 @@ export function saveNewTopic() {
       if (!state.topics.newTopic)
         throw "No new topic has been created"
       const newTopic = state.topics.newTopic;
-      const newTopicMembers = state.topics.newTopicMembers;
-
+      
       if (!state.prefs.org)
         throw "No current org set"
 
-      var results = await topicService.add(state.prefs.org.id, newTopic, newTopicMembers);
+      let results = await topicService.add(state.prefs.org.id, newTopic);
       dispatch({type: Types.TOPICS_ADD_SUCCESS, payload: results});
       dispatch({type: Types.TOPICS_NEW_TOPIC_RESET});
       return true;
@@ -213,15 +207,29 @@ export function saveNewTopic() {
   }
 }
 
-export function updateNewTopic(prop, value) {
+export function collectResults(topicId) {
   return async (dispatch, getState) => {
-    dispatch({type: Types.TOPICS_NEW_TOPIC_UPDATE, payload: {prop: prop, value: value}});
+    dispatch({type: Types.TOPIC_RESULTS_REQUEST});
+    
+    try {
+      let results = await topicService.collectResults(topicId);
+      dispatch({type: Types.TOPIC_RESULTS_SUCCESS, payload: results});
+    }
+    catch (e) {
+      dispatch({type: Types.TOPIC_RESULTS_FAILURE, payload: Error.fromException(e)});
+    }
   }
 }
 
-export function updateMembersInNewTopic(members) {
+export function clearResults() {
   return async (dispatch, getState) => {
-    dispatch({type: Types.TOPICS_NEW_TOPIC_UPDATE_MEMBERS, payload: members});
+    dispatch({type: Types.TOPIC_RESULTS_RESET});
+  }
+}
+
+export function updateNewTopic(prop, value) {
+  return async (dispatch, getState) => {
+    dispatch({type: Types.TOPICS_NEW_TOPIC_UPDATE, payload: {prop: prop, value: value}});
   }
 }
 

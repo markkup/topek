@@ -13,7 +13,7 @@ class Props extends PropMap {
     props.orgOwner = this.state.prefs.org.owner;
     props.currentUser = this.state.profile.user;
     props.updateError = this.state.topics.updateError;
-    props.updateMembers = this.bindEvent(TopicActions.updateMembersInNewTopic);
+    props.updateNewTopic = this.bindEvent(TopicActions.updateNewTopic);
   }
 }
 
@@ -68,7 +68,7 @@ export default class TopicAddMembersScreen extends Component {
 
   async _save() {
     const { navigate } = this.props.navigation;
-    await this.props.updateMembers(this.members)
+    await this.props.updateNewTopic("memberIds", this.members.keySeq().toArray());
     this.props.navigation.navigate("TopicAddConfirm")
   }
 }

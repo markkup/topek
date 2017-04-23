@@ -11,7 +11,7 @@ const TopicRecord = Immutable.Record({
   description: "",
   owner: new User(),
   image: new Image(),
-  memberCount: 0,
+  memberIds: [],
   details: new Immutable.List()
 })
 
@@ -24,7 +24,7 @@ export default class Topic extends TopicRecord {
       .set("type", topic.get("type"))
       .set("name", topic.get("name"))
       .set("description", topic.get("description"))
-      .set("memberCount", topic.get("memberCount"))
+      .set("memberIds", topic.get("memberIds"))
       .set("details", topic.get("details"))
       .set("image", Image.fromParse(topic.get("image")))
       .set("owner", User.fromParse(topic.get("owner")))

@@ -8,6 +8,7 @@ import members from "./memberReducer"
 import prefs from "./prefsReducer"
 import messaging from "./messagingReducer"
 import topicStates from "./topicStateReducer"
+import topicResults from "./topicResultsReducer"
 
 export default combineReducers({
   nav,
@@ -18,5 +19,6 @@ export default combineReducers({
   orgs,
   members,
   prefs,
-  messaging
+  messaging,
+  topicResults
 });

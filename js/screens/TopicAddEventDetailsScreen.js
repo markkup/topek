@@ -19,10 +19,10 @@ class Props extends PropMap {
 }
 
 @connectprops(Props)
-export default class TopicAddTypeDetailsScreen extends Component {
+export default class TopicAddEventDetailsScreen extends Component {
 
   static navigationOptions = {
-    title: "Enter Details",
+    title: "Event Details",
     header: ({ state }, defaultHeader) => ({
       ...defaultHeader,
       right: <ToolbarTextButton title="Next" active={true} onPress={() => state.params.rightClick()} />,

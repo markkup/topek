@@ -24,7 +24,7 @@ export default class ToolbarTextButton extends Component {
     const weight = this.props.active ? "600" : "400";
     const color = this.props.disabled ? "#ccc" : this.props.tint;
     return (
-      <Text style={[styles.text, {color: color, fontWeight: weight}]}>{this.props.title}</Text>
+      <Text style={[this.props.style, styles.text, {color: color, fontWeight: weight}]}>{this.props.title}</Text>
     )
   }
 }

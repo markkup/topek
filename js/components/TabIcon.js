@@ -10,7 +10,7 @@ export default class TabIcon extends Component {
     return (<Icon 
       name={focused ? "ios-" + icon : "ios-" + icon + "-outline"} 
       size={28} 
-      style={focused ? {color: Color.tint} : {color: Color.tintInactive}}
+      style={focused ? {color: Color.tint} : {color: Color.subtle}}
     />)
   }
 }

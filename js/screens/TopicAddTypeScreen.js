@@ -50,7 +50,7 @@ export default class TopicAddScreen extends Component {
           <FieldGroup>
             <SelectField text="Announcement" icon="volume-2" accessory={true} onPress={() => this._saveType("announcement")} />
             <SelectField text="Event" icon="calendar" accessory={true} onPress={() => this._saveType("event")} />
-            {/*<SelectField text="Poll" icon="like" accessory={true} onPress={() => this._saveType("poll")} />*/}
+            <SelectField text="Poll" icon="like" accessory={true} onPress={() => this._saveType("poll")} />
           </FieldGroup>
 
         </Form>
@@ -69,8 +69,11 @@ export default class TopicAddScreen extends Component {
     if (type == "announcement") {
       this.props.navigation.navigate("TopicAddMembers")
     }
-    else {
-      this.props.navigation.navigate("TopicAddTypeDetails")
+    else if (type == "event") {
+      this.props.navigation.navigate("TopicAddEventDetails")
+    }
+    else if (type == "poll") {
+      this.props.navigation.navigate("TopicAddPollDetails")
     }
   }
 }

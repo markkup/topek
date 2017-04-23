@@ -18,6 +18,7 @@ const Color = {
     blue: "rgb(0, 122, 255)",
     purple: "rgb(88, 86, 214)",
     pink: "rgb(255, 45, 85)",
+    lightGray: "rgb(233, 235, 238)",
 }
 
 const Dims = {

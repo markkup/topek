@@ -5,6 +5,8 @@ import Styles, { Color, Dims } from "../styles"
 
 export default class ErrorHeader extends Component {
   render() {
+    if (!this.props.text || this.props.text == "")
+      return null;
     return (<View style={styles.container}>
       <Icon name="exclamation" color={"white"} size={16} style={styles.icon} />
       <Text style={styles.text}>

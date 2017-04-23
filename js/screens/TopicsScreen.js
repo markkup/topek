@@ -16,7 +16,7 @@ import SimpleLineIcon from "react-native-vector-icons/SimpleLineIcons"
 class Props extends PropMap {
   map(props) {
     props.isAuthenticated = this.state.auth.isAuthenticated;
-    props.topics = TopicSelectors.getTopicList(this.state); //this.state.topics.list;
+    props.topics = TopicSelectors.getTopicList(this.state);
     props.members = this.state.members.list;
     props.isRefreshing = this.state.topics.isRefreshing;
     props.loadError = this.state.topics.loadError;
@@ -103,6 +103,7 @@ export default class TopicsScreen extends Component {
           disableRightSwipe={true}
           rightOpenValue={-75}
           closeOnRowBeginSwipe={true}
+          recalculateHiddenLayout={true}
         />
       </View>
     )
@@ -135,7 +136,7 @@ export default class TopicsScreen extends Component {
     let icon = null;
     let sub = null;
     let when = null;
-    let memberCount = rowData.topic.memberCount || 0;
+    let memberCount = rowData.topic.memberCount;
     let status = null;
 
     if (topic.type == "event") {

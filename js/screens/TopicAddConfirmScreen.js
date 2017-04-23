@@ -9,7 +9,6 @@ import Styles, { Color, Dims } from "../styles"
 class Props extends PropMap {
   map(props) {
     props.newTopic = this.state.topics.newTopic;
-    props.newTopicMembers = this.state.topics.newTopicMembers;
     props.updateError = this.state.topics.updateError;
     props.dismissModal = this.bindEvent(NavActions.dismissModal);
     props.saveNewTopic = this.bindEvent(TopicActions.saveNewTopic);
@@ -43,12 +42,12 @@ export default class TopicAddConfirmScreen extends Component {
 
   render() {
     const { navigate, goBack } = this.props.navigation;
-    const { newTopic, newTopicMembers } = this.props;
+    const { newTopic } = this.props;
 
     let text = "";
     if (newTopic) {
       text = "Adding a new " + newTopic.type.toUpperCase() + " topic titled '" + newTopic.name + "'. ";
-      text += "The new topic is assigned to " + newTopicMembers.size + " member(s).";
+      text += "The new topic is assigned to " + newTopic.memberIds.length + " member(s).";
     }
 
     return (

@@ -7,7 +7,8 @@ const TopicStateRecord = Immutable.Record({
   topicId: "",
   userId: "",
   read: false,
-  dismissed: false
+  dismissed: false,
+  results: []
 })
 
 export default class TopicState extends TopicStateRecord {
@@ -18,8 +19,9 @@ export default class TopicState extends TopicStateRecord {
       .set("updatedAt", topicState.updatedAt)
       .set("topicId", topicState.get("topicId"))
       .set("userId", topicState.get("userId"))
-      .set("read", topicState.get("read"))
-      .set("dismissed", topicState.get("dismissed"))
+      .set("read", topicState.has("read") && topicState.get("read"))
+      .set("dismissed", topicState.has("dismissed") && topicState.get("dismissed"))
+      .set("results", topicState.has("results") ? topicState.get("results") : [])
     return res;
   }
 }

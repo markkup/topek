@@ -6,7 +6,8 @@ import SettingsScreen from "../screens/SettingsScreen"
 
 import TopicAddScreen from "../screens/TopicAddScreen"
 import TopicAddTypeScreen from "../screens/TopicAddTypeScreen"
-import TopicAddTypeDetailsScreen from "../screens/TopicAddTypeDetailsScreen"
+import TopicAddEventDetailsScreen from "../screens/TopicAddEventDetailsScreen"
+import TopicAddPollDetailsScreen from "../screens/TopicAddPollDetailsScreen"
 import TopicAddMembersScreen from "../screens/TopicAddMembersScreen"
 import TopicAddConfirmScreen from "../screens/TopicAddConfirmScreen"
 
@@ -19,10 +20,11 @@ import MemberSelectorScreen from "../screens/MemberSelectorScreen"
 
 import ChooseLocationScreen from "../screens/ChooseLocationScreen"
 import ChooseReminderScreen from "../screens/ChooseReminderScreen"
+import ChooseAnswersScreen from "../screens/ChooseAnswersScreen"
 import TestScreen from "../screens/TestScreen"
 
 const modalOptions = {
-  //initialRouteName: "TopicAddTypeDetails",
+  //initialRouteName: "TopicAddPollDetails",
   headerMode: "float",
   navigationOptions: {
     header: {
@@ -39,11 +41,13 @@ const modalOptions = {
 export const TopicAddStack = StackNavigator({
   TopicsAdd: { screen: TopicAddScreen },
   TopicAddType: { screen: TopicAddTypeScreen },
-  TopicAddTypeDetails: { screen: TopicAddTypeDetailsScreen },
+  TopicAddEventDetails: { screen: TopicAddEventDetailsScreen },
+  TopicAddPollDetails: { screen: TopicAddPollDetailsScreen },
   TopicAddMembers: { screen: TopicAddMembersScreen },
   TopicAddConfirm: { screen: TopicAddConfirmScreen },
   ChooseLocation: { screen: ChooseLocationScreen },
   ChooseReminder: { screen: ChooseReminderScreen },
+  ChooseAnswers: { screen: ChooseAnswersScreen }
 }, modalOptions);
 
 export const SettingsStack = StackNavigator({

@@ -6,14 +6,14 @@ import { connectprops, PropMap } from "react-redux-propmap"
 import Immutable from "immutable"
 import Ionicon from "react-native-vector-icons/Ionicons"
 import { TopicActions } from "../state/actions"
+import { TopicSelectors } from "../state/selectors"
 import Styles, { Color, Dims, TextSize } from "../styles"
 
 class Props extends PropMap {
   map(props) {
-    props.members = this.state.topics.selectedTopicMembers;
+    props.members = TopicSelectors.getCurrentTopic(this.state).members;
     props.isOwner = this.state.topics.selectedTopic.owner.id == this.state.profile.user.id;
-    props.isWorking = this.state.topics.isLoadingMembers;
-    props.removeClicked = this.bindEvent(TopicActions.removeMembersfromSelectedTopic);
+    props.removeClicked = this.bindEvent(TopicActions.removeMembersFromSelectedTopic);
   }
 }
 
@@ -30,9 +30,10 @@ export default class TopicMembersScreen extends Component {
 
   constructor(props) {
     super(props);
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => !Immutable.is(r1, r2)});
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      dataSource: ds.cloneWithRows(props.members.toArray())
+      removingMemberId: null,
+      dataSource: ds.cloneWithRows(props.members)
     };
   }
 
@@ -44,9 +45,9 @@ export default class TopicMembersScreen extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!Immutable.is(this.props.members, nextProps.members)) {
+    if (this.props.members != nextProps.members) {
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(nextProps.members.toArray())
+        dataSource: this.state.dataSource.cloneWithRows(nextProps.members)
       });
     }
   }
@@ -54,9 +55,9 @@ export default class TopicMembersScreen extends Component {
   render() {
     return (
       <View style={Styles.screen}>
-        <WorkingOverlay working={this.props.isWorking} />
         { this.props.loadError && <ErrorHeader text={this.props.loadError} /> }
         <ListView
+          key={this.state.removingMemberId} // trick to refresh list
           style={{paddingTop: 8}}
           dataSource={this.state.dataSource}
           renderRow={this._renderRow.bind(this)}
@@ -69,34 +70,39 @@ export default class TopicMembersScreen extends Component {
   }
 
   _renderRow(member) {
-    const {navigate} = this.props.navigation;
-    var onPress = () => { 
-    };
+
+    let removeButton = null;
+    if (this.state.removingMemberId) {
+      let removing = this.state.removingMemberId && this.state.removingMemberId == member.id
+      removeButton = removing ? <ActivityIndicator /> : null
+    }
+    else if (this.props.isOwner) {
+      removeButton = (
+        <TouchableOpacity onPress={() => this._removeMember(member)}>
+          <Ionicon name="ios-close-circle-outline" size={28} color={Color.tint} />
+        </TouchableOpacity>
+      )
+    }
+
     return (
-      <TouchableHighlight onPress={onPress} underlayColor="#eee">
+      <TouchableHighlight onPress={() => {}} underlayColor="#eee">
         <View style={styles.row}>
           <AvatarImage user={member} background="dark" style={[styles.avatar]} />
           <View style={styles.memberNameContainer}>
             <Text style={styles.name}>{member.name}</Text>
             <Text style={styles.alias}>{"@" + member.alias}</Text>
           </View>
-          {this.props.isOwner && this._removingMemberId != member.id &&
-            <TouchableOpacity onPress={() => this._removeMember(member)}>
-              <Ionicon name="ios-close-circle" size={28} color={Color.tint} />
-            </TouchableOpacity>}
-          {this.props.isOwner && this._removingMemberId == member.id &&
-            <ActivityIndicator />}
+          {removeButton}
         </View>
       </TouchableHighlight>
     );
   }
 
-  _removingMemberId = null;
-
-  async _removeMember(member) {
-    this._removingMemberId = member.id;
-    await this.props.removeClicked(member);
-    this._removingMemberId = null;
+  _removeMember(member) {
+    this.setState({removingMemberId: member.id}, async () => {
+      await this.props.removeClicked([member.id]);
+      this.setState({removingMemberId: null})
+    });
   }
 
   _renderSeparator(sectionID, rowID, adjacentRowHighlighted) {
@@ -114,6 +120,7 @@ let styles = StyleSheet.create({
     paddingHorizontal: Dims.horzPadding,
     paddingVertical: 4,
     flexDirection: "row",
+    backgroundColor: Color.white,
     flex: 1,
     alignItems: "center"
   },

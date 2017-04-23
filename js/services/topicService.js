@@ -1,6 +1,6 @@
 import Parse from "parse/react-native"
 import { InteractionManager } from "react-native"
-import { TopicMap, Topic, TopicStateMap, TopicState, UserMap, Error } from "../models"
+import { TopicMap, Topic, TopicStateMap, TopicResultMap, TopicState, UserMap, Error } from "../models"
 import * as Utils from "../lib/utils"
 import LiveQueryWatcher from "../lib/LiveQueryWatcher"
 
@@ -46,7 +46,7 @@ class TopicService {
     }
   }
 
-  async load(orgId) {
+  async load(orgId, userId) {
 
     await InteractionManager.runAfterInteractions();
     
@@ -55,11 +55,20 @@ class TopicService {
       let org = new ParseOrg();
       org.id = orgId;
 
-      let query = new Parse.Query("Topic")
+      let user = new ParseUser();
+      user.id = userId;
+
+      let queryOwner = new Parse.Query("Topic")
+        .equalTo("owner", user)
+        .equalTo("org", org)
+
+      let queryMember = new Parse.Query("Topic")
+        .containedIn("memberIds", [userId, "*"])
+        .equalTo("org", org)
+
+      let query = Parse.Query.or(queryOwner, queryMember)
         .include("owner")
-        .include("members")
         .descending("createdAt")
-        .equalTo("org", org);
 
       const data = await query.find();
       return TopicMap.fromParse(data);
@@ -69,7 +78,7 @@ class TopicService {
     }
   }
 
-  async loadMembers(topicId) {
+  /*async loadMembers(topicId) {
 
     await InteractionManager.runAfterInteractions();
     
@@ -90,7 +99,7 @@ class TopicService {
     catch (e) {
       throw Error.fromException(e)
     }
-  }
+  }*/
 
   async add(orgId, topic, topicMembers) {
 
@@ -112,17 +121,12 @@ class TopicService {
       let t = new ParseTopic();
       t.set("type", topic.type);
       t.set("name", topic.name);
+      t.set("memberIds", topic.memberIds);
       t.set("owner", me);
       t.set("org", org);
       t.set("description", topic.description);
       t.set("details", topic.details)
       t.set("image", image);
-      var memberRelation = t.relation("members");
-      topicMembers.map(m => {
-        let u = new ParseUser();
-        u.id = m.id;
-        memberRelation.add(u);
-      })
 
       const result = await t.save();
       return Topic.fromParse(result);
@@ -149,7 +153,42 @@ class TopicService {
     }
   }
 
-  async addMembers(topicId, membersMap) {
+  async update(topicId, prop, value) {
+
+    await InteractionManager.runAfterInteractions();
+
+    try {
+
+      let topic = new ParseTopic();
+      topic.set("id", topicId); 
+      topic.set(prop, value);
+      
+      const result = await topic.save();
+      return Topic.fromParse(result);
+    }
+    catch (e) {
+      throw Error.fromException(e)
+    }
+  }
+
+  async collectResults(topicId) {
+
+    await InteractionManager.runAfterInteractions();
+    
+    try {
+
+      let query = new Parse.Query("TopicState")
+        .equalTo("topicId", topicId)
+
+      const result = await query.find();
+      return TopicResultMap.fromParse(result);
+    }
+    catch (e) {
+      throw Error.fromException(e)
+    }
+  }
+
+ /* async addMembers(topicId, memberIds) {
 
     await InteractionManager.runAfterInteractions();
 
@@ -158,22 +197,19 @@ class TopicService {
       let topic = new ParseTopic();
       topic.set("id", topicId);
 
-      let relation = topic.relation("members");
-      membersMap.map(member => {
-        let user = new ParseUser();
-        user.id = member.id;
-        relation.add(user);
+      memberIds.map(member => {
+        topic.addUnique("memberIds", member.id);
       });
       
       const result = await topic.save();
-      return this.loadMembers(topicId);
+      return Topic.fromParse(result);
     }
     catch (e) {
       throw Error.fromException(e)
     }
   }
 
-  async removeMember(topicId, member) {
+  async removeMembers(topicId, memberIds) {
 
     await InteractionManager.runAfterInteractions();
 
@@ -182,18 +218,18 @@ class TopicService {
       let topic = new ParseTopic();
       topic.set("id", topicId);
 
-      let relation = topic.relation("members");
-      let user = new ParseUser();
-      user.id = member.id;
-      relation.remove(user);
+      memberIds.map(member => {
+        topic.remove("memberIds", member.id);
+      });
       
       const result = await topic.save();
-      return this.loadMembers(topicId);
+      return Topic.fromParse(result);
     }
     catch (e) {
       throw Error.fromException(e)
     }
   }
+  */
 
   async getTopicState(userId, topicId) {
 
@@ -251,6 +287,32 @@ class TopicService {
         topicState.set("topicId", topicId);
       }
       topicState.set("dismissed", dismissed);
+
+      const result = await topicState.save();
+      return TopicState.fromParse(result);
+    }
+    catch (e) {
+      throw Error.fromException(e)
+    }
+  }
+
+  async updateState(userId, topicId, prop, value) {
+
+    await InteractionManager.runAfterInteractions();
+
+    try {
+
+      let topicState = await this.getTopicState(userId, topicId);
+      if (!topicState) {
+        topicState = new ParseTopicState();
+        topicState.set("userId", userId);
+        topicState.set("topicId", topicId);
+      }
+
+      if (topicState.get(prop) == value)
+        return TopicState.fromParse(topicState);
+
+      topicState.set(prop, value);
 
       const result = await topicState.save();
       return TopicState.fromParse(result);
