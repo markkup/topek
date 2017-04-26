@@ -1,6 +1,7 @@
 import { StackNavigator } from "react-navigation"
 import Styles, { Color, Dims } from "../styles"
 import TabsNav from "./tabs"
+import DismissableStackNavigator from "../components/DismissableStackNavigator"
 
 import SettingsScreen from "../screens/SettingsScreen"
 
@@ -38,7 +39,7 @@ const modalOptions = {
   }
 }
 
-export const TopicAddStack = StackNavigator({
+export const TopicAddStack = DismissableStackNavigator({
   TopicsAdd: { screen: TopicAddScreen },
   TopicAddType: { screen: TopicAddTypeScreen },
   TopicAddEventDetails: { screen: TopicAddEventDetailsScreen },
@@ -50,25 +51,25 @@ export const TopicAddStack = StackNavigator({
   ChooseAnswers: { screen: ChooseAnswersScreen }
 }, modalOptions);
 
-export const SettingsStack = StackNavigator({
+export const SettingsStack = DismissableStackNavigator({
   Settings: { screen: SettingsScreen },
   SecondScreen: { screen: TestScreen }
 }, modalOptions);
 
-export const ProfileStack = StackNavigator({
+export const ProfileStack = DismissableStackNavigator({
   Profile: { screen: ProfileScreen },
   SecondScreen: { screen: TestScreen }
 }, modalOptions);
 
-export const ProfileEditStack = StackNavigator({
+export const ProfileEditStack = DismissableStackNavigator({
   Settings: { screen: ProfileEditScreen },
   SecondScreen: { screen: TestScreen }
 }, modalOptions);
 
-export const MessagingStack = StackNavigator({
+export const MessagingStack = DismissableStackNavigator({
   Messaging: { screen: MessagingScreen }
 }, modalOptions);
 
-export const MemberSelectorStack = StackNavigator({
+export const MemberSelectorStack = DismissableStackNavigator({
   MemberSelector: { screen: MemberSelectorScreen }
 }, modalOptions);

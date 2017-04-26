@@ -74,7 +74,7 @@ export default class TopicAddConfirmScreen extends Component {
   async _save() {
     this.props.navigation.setParams({working: true});
     await this.props.saveNewTopic();
-    this.props.dismissModal("TopicAddStack")
+    this.props.navigation.dismiss()
   }
 }
 

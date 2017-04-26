@@ -195,7 +195,7 @@ export default class TopicAddScreen extends Component {
 
   _cancel() {
     Keyboard.dismiss()
-    this.props.navigation.goBack(null)
+    this.props.navigation.dismiss()
   }
 }
 
