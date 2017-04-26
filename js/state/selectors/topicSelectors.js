@@ -65,6 +65,9 @@ export const getCurrentTopic = createSelector(
 export const getCurrentTopicState = createSelector(
   [getSelectedTopic, getTopicStates],
   (topic, topicStates) => {
+    if (topic == null) {
+      return {};
+    }
     return topicStates.get(topic.id);
   }
 )
@@ -72,6 +75,9 @@ export const getCurrentTopicState = createSelector(
 export const getCurrentTopicIsUpdating = createSelector(
   [getSelectedTopic, getTopicStateIsUpdatingTopicId],
   (topic, topicStateIsUpdatingTopicId) => {
+    if (topic == null) {
+      return true;
+    }
     return topic.id == topicStateIsUpdatingTopicId;
   }
 )
@@ -79,6 +85,9 @@ export const getCurrentTopicIsUpdating = createSelector(
 export const getCurrentTopicUpdatingError = createSelector(
   [getSelectedTopic, getTopicStateUpdateErrorTopicId, getTopicStateUpdateError],
   (topic, topicStateUpdateErrorTopicId, topicStateUpdateError) => {
+    if (topic == null) {
+      return "";
+    }
     if (topic.id == topicStateUpdateErrorTopicId)
       return topicStateUpdateError;
     return "";
