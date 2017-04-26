@@ -107,7 +107,7 @@ export default class TopicsScreen extends Component {
               <TouchableOpacity 
                 style={[styles.backRightBtn, styles.backRightBtnRight]} 
                 onPress={() => this._handleHideClick(data, secId, rowId, rowMap)}>
-                <Text style={styles.backTextWhite}>Dismiss</Text>
+                <Text style={styles.backTextWhite}>Ignore</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -343,7 +343,7 @@ let styles = StyleSheet.create({
   },
 	rowBack: {
 		alignItems: 'center',
-		backgroundColor: '#DDD',
+		backgroundColor: Color.white,
 		flex: 1,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
