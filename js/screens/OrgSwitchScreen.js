@@ -22,7 +22,7 @@ export default class ActivityScreen extends Component {
 
   render() {
     return (
-      <View style={Styles.screen}>
+      <View style={Styles.screenFields}>
         {this._renderOrgsGroup()}
       </View>
     )

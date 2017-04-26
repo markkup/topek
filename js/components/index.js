@@ -1,4 +1,5 @@
 import ErrorHeader from "./ErrorHeader"
+import Navbar from "./Navbar"
 import NavbarButton from "./NavbarButton"
 import TabIcon from "./TabIcon"
 import Toolbar from "./Toolbar"
@@ -18,6 +19,7 @@ import AnimatedModal from "./AnimatedModal"
 
 export {
   ErrorHeader,
+  Navbar,
   NavbarButton,
   TabIcon,
   Toolbar,

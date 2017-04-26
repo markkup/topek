@@ -9,6 +9,7 @@ const Color = {
     separator: "rgba(225, 225, 225, 255)",
     subtle: "#999",
     tintNavbar: "#EC5C5B",
+    transparent: "transparent",
     white: "rgb(255, 255, 255)",
     red: "rgb(255, 59, 48)",
     orange: "rgb(255, 149, 0)",
@@ -19,6 +20,7 @@ const Color = {
     purple: "rgb(88, 86, 214)",
     pink: "rgb(255, 45, 85)",
     lightGray: "rgb(233, 235, 238)",
+    gray: "rgb(200, 200, 200)",
 }
 
 const Dims = {

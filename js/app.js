@@ -12,6 +12,7 @@ class Props extends PropMap {
     props.isAuthenticated = this.state.auth.isAuthenticated;
     props.nav = this.state.nav;
     props.dispatch = this.dispatch;
+    props.state = this.state;
   }
 }
 
@@ -30,7 +31,11 @@ class App extends Component {
       return (
       <View style={Styles.app}>
         {this._renderStatusBar()}      
-        <Nav navigation={addNavigationHelpers({dispatch: this.props.dispatch, state: this.props.nav})} />
+        <Nav navigation={addNavigationHelpers({
+          dispatch: this.props.dispatch, 
+          state: this.props.nav,
+          getState: () => this.props.state
+        })} />
       </View>)
     }
   }
@@ -38,7 +43,7 @@ class App extends Component {
   _renderStatusBar() {
     return <StatusBar
       translucent={true}
-      backgroundColor="rgba(0, 0, 0, 0.2)"
+      backgroundColor="rgba(255, 255, 255, 0)"
       barStyle="dark-content"
     />
   }

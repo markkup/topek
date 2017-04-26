@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Image, Animated } from "react-native"
 import CachedImage from "react-native-cached-image"
 import { Platform } from "react-native"
 import Styles, { Color, Dims } from "../styles"
+import IonIcon from "react-native-vector-icons/Ionicons"
 
 export default class AvatarImage extends Component {
   render() {
@@ -27,23 +28,27 @@ export default class AvatarImage extends Component {
       }
     }
 
-    if (avatarSource == null)
-      avatarSource = require("../assets/images/circle-user-man-512.png")
-
     const style = {
       width: this.props.size, 
       height: this.props.size, 
       borderRadius: Platform.OS === "ios" ? this.props.size/2 : 150,
       backgroundColor: this.props.background == "dark" ? darkBg : lightBg,
       padding: 0,
-      flexDirection: "row"
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+
+    let color = this.props.background == "dark" ? "#666" : "#fff";
+    if (this.props.color != null) {
+      color = this.props.color;
     }
 
     if (initials) {
 
       const initialsStyle = {
         fontSize: this.props.size/2,
-        color: this.props.background == "dark" ? "#666" : "#fff",
+        color: color
       }
 
       return (
@@ -52,12 +57,17 @@ export default class AvatarImage extends Component {
         </View>)
     }
 
+    // adjustments for default icon
+    let size = this.props.size * 1.2;
+    let marginTop = this.props.size * 0.1;
+
     return (
       <View style={[style, this.props.style]}>
-        <CachedImage
+        {avatarSource ? <CachedImage
           source={avatarSource}
           style={[style, this.props.style, styles.icon]}
-        />
+        /> : 
+        <IonIcon name="ios-contact" size={size} color={color}  style={{marginTop: marginTop}} />}
       </View>
     )
   }
@@ -70,14 +80,16 @@ AvatarImage.propTypes = {
   ]),
   user: React.PropTypes.object,
   size: React.PropTypes.number,
-  background: React.PropTypes.string
+  background: React.PropTypes.string,
+  color: React.PropTypes.string,
 }
 
 AvatarImage.defaultProps = {
   source: null,
   user: null,
   size: 35,
-  background: "light" // dark
+  background: "light", // dark
+  color: null
 }
 
 let styles = StyleSheet.create({

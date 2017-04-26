@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { StyleSheet, View, StatusBar } from "react-native"
-import { ToolbarTextButton, UserSelectListView } from "../components"
+import { ToolbarButton, ToolbarTextButton, UserSelectListView } from "../components"
 import { connectprops, PropMap } from "react-redux-propmap"
 import { UserMap } from "../models"
 import { TopicActions } from "../state/actions"
@@ -25,7 +25,7 @@ export default class MemberSelectorScreen extends Component {
     title: "Select Members",
     header: ({ state, goBack }, defaultHeader) => ({
       ...defaultHeader,
-      left: <ToolbarTextButton title="Cancel" disabled={state.params && state.params.working} onPress={() => goBack(null)} />,
+      left: <ToolbarButton name="close" disabled={state.params && state.params.working} onPress={() => goBack(null)} />,
       right: <ToolbarTextButton title="Add" active={true} disabled={!state.params || !state.params.valid} working={state.params && state.params.working} onPress={() => state.params.rightClick()} />,
       visible: true
     })

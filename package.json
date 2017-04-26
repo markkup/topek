@@ -34,7 +34,7 @@
     "react-native-sortable-listview": "^0.2.2",
     "react-native-swipe-list-view": "^0.4.1",
     "react-native-vector-icons": "^4.0.0",
-    "react-navigation": "git+https://github.com/react-community/react-navigation.git",
+    "react-navigation": "^1.0.0-beta.7",
     "react-redux": "^5.0.2",
     "react-redux-propmap": "github:markkup/react-redux-propmap",
     "redux": "^3.6.0",

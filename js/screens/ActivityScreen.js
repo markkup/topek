@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, ScrollView } from "react-native"
 import { Header, AvatarImage, ToolbarTextButton, ToolbarButton } from "../components"
 import { connectprops, PropMap } from "react-redux-propmap"
 import { Field, FieldGroup, TouchableField, InputField, SwitchField, Form } from "../react-native-fieldsX"
-import Styles, { Color, Dims } from "../styles"
+import Styles, { Color, Dims, TextSize } from "../styles"
 
 import AlertsPage from "./AlertsPage"
 import HistoryPage from "./HistoryPage"
@@ -30,6 +30,7 @@ export default class ActivityScreen extends Component {
         <ScrollableTabView
           renderTabBar={() => <DefaultTabBar tabStyle={{paddingBottom:0}} style={{borderWidth:StyleSheet.hairlineWidth}} />}
           tabBarBackgroundColor={Color.white}
+          tabBarTextStyle={{fontSize: TextSize.small}}
           tabBarActiveTextColor={Color.tint}
           tabBarInactiveTextColor={Color.subtle}
           tabBarUnderlineStyle={{backgroundColor:Color.tint,height:2}}

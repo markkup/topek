@@ -48,6 +48,10 @@
 		CC30899B1E8426F300723976 /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		CC30899C1E8426F300723976 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		CC30899D1E8426F300723976 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
+		CC38D6FA1EAE8EE30036F3D4 /* RSKImageCropper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC38D6F91EAE8EE30036F3D4 /* RSKImageCropper.framework */; };
+		CC38D6FB1EAE8EE30036F3D4 /* RSKImageCropper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CC38D6F91EAE8EE30036F3D4 /* RSKImageCropper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CC38D6FD1EAE8EE30036F3D4 /* QBImagePicker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC38D6FC1EAE8EE30036F3D4 /* QBImagePicker.framework */; };
+		CC38D6FE1EAE8EE30036F3D4 /* QBImagePicker.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CC38D6FC1EAE8EE30036F3D4 /* QBImagePicker.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CC5939951E68EF81007A201E /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5939811E68EF3D007A201E /* libRCTPushNotification.a */; };
 		D34E0408B58545B5885E022C /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C742B45B2DAD4F7EA9880C9C /* Entypo.ttf */; };
 		DE50F559D2A84550BBB940EE /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5E898D63B90049C2BB524A31 /* Octicons.ttf */; };
@@ -288,12 +292,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		CC14D2F31E84615D00A126AE /* Embed Frameworks */ = {
+		CC38D6961EAE8BFF0036F3D4 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				CC38D6FB1EAE8EE30036F3D4 /* RSKImageCropper.framework in Embed Frameworks */,
+				CC38D6FE1EAE8EE30036F3D4 /* QBImagePicker.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -340,6 +346,8 @@
 		B1F4BD994EF843429F871FC8 /* imageCropPicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = imageCropPicker.xcodeproj; path = "../node_modules/react-native-image-crop-picker/ios/imageCropPicker.xcodeproj"; sourceTree = "<group>"; };
 		C09BBABA04C74D8C8B4D6B91 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		C742B45B2DAD4F7EA9880C9C /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		CC38D6F91EAE8EE30036F3D4 /* RSKImageCropper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RSKImageCropper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC38D6FC1EAE8EE30036F3D4 /* QBImagePicker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = QBImagePicker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC5939711E68EF3C007A201E /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		CC5939C11E690939007A201E /* topek.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = topek.entitlements; path = topek/topek.entitlements; sourceTree = "<group>"; };
 		D120144E7D04413AA9815D84 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
@@ -368,6 +376,7 @@
 				CC30899A1E8426F300723976 /* libRCTNetwork.a in Frameworks */,
 				CC30899B1E8426F300723976 /* libRCTSettings.a in Frameworks */,
 				CC30899C1E8426F300723976 /* libRCTText.a in Frameworks */,
+				CC38D6FA1EAE8EE30036F3D4 /* RSKImageCropper.framework in Frameworks */,
 				CC30899D1E8426F300723976 /* libRCTVibration.a in Frameworks */,
 				CC30896C1E84245400723976 /* libRCTWebSocket.a in Frameworks */,
 				CC5939951E68EF81007A201E /* libRCTPushNotification.a in Frameworks */,
@@ -376,6 +385,7 @@
 				95120867EA35452EA0402917 /* libRNFS.a in Frameworks */,
 				C0E8843A8D594DF2A51F2209 /* libAirMaps.a in Frameworks */,
 				7061C1878B164DD2B9E515BE /* libimageCropPicker.a in Frameworks */,
+				CC38D6FD1EAE8EE30036F3D4 /* QBImagePicker.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -564,6 +574,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				CC38D6FC1EAE8EE30036F3D4 /* QBImagePicker.framework */,
+				CC38D6F91EAE8EE30036F3D4 /* RSKImageCropper.framework */,
 				13B07FAE1A68108700A75B9A /* topek */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* topekTests */,
@@ -680,7 +692,7 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				CC14D2F31E84615D00A126AE /* Embed Frameworks */,
+				CC38D6961EAE8BFF0036F3D4 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1269,9 +1281,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = topek/topek.entitlements;
-				CURRENT_PROJECT_VERSION = 67;
+				CURRENT_PROJECT_VERSION = 75;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = N33V7Q594B;
+				ENABLE_BITCODE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native/Libraries/PushNotificationIOS",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/**",
@@ -1297,8 +1314,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = topek/topek.entitlements;
-				CURRENT_PROJECT_VERSION = 67;
+				CURRENT_PROJECT_VERSION = 75;
 				DEVELOPMENT_TEAM = N33V7Q594B;
+				ENABLE_BITCODE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native/Libraries/PushNotificationIOS",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/**",
@@ -1557,8 +1579,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = topek/topek.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 67;
+				CURRENT_PROJECT_VERSION = 75;
 				DEVELOPMENT_TEAM = N33V7Q594B;
+				ENABLE_BITCODE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native/Libraries/PushNotificationIOS",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/**",
@@ -1708,8 +1735,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = topek/topek.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 67;
+				CURRENT_PROJECT_VERSION = 75;
 				DEVELOPMENT_TEAM = N33V7Q594B;
+				ENABLE_BITCODE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/../node_modules/react-native/Libraries/PushNotificationIOS",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/**",

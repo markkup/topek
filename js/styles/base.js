@@ -22,8 +22,15 @@ export default {
   },
 
   navbar: {
-    backgroundColor: "#fff",
-    shadowColor: "transparent"
+    backgroundColor: Color.white,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: Color.separator
+  },
+
+  navbarBorderless: {
+    backgroundColor: Color.white,
+    shadowColor: "transparent",
+    borderBottomWidth: 0
   },
 
   navbarTinted: {

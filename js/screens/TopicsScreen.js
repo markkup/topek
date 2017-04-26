@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { StyleSheet, View, Text, TextInput, Button, ListView, 
         TouchableHighlight, TouchableOpacity, RefreshControl, InteractionManager } from "react-native"
-import { ErrorHeader, Toolbar, ToolbarButton, ToolbarButtonExample, Header, AvatarImage, TopicImage } from "../components"
+import { ErrorHeader, Toolbar, ToolbarButton, ToolbarButtonExample, Header, AvatarImage, TopicImage, Navbar } from "../components"
 import Immutable from "immutable"
 import Datetime from "../lib/datetime"
 import { connectprops, PropMap } from "react-redux-propmap"
@@ -72,12 +72,23 @@ export default class TopicsScreen extends Component {
         </Toolbar>
       </View>
     )
+    let header2 = (
+      <Navbar
+        title={"My Actions"}
+        leftButton={<ToolbarButton name="options" onPress={() => {}} />}
+        rightButton={<ToolbarButton name="add" onPress={() => this._addNewTopic()} />}>
+        <TextInput 
+          style={{flex:1,fontSize:14,height:28,backgroundColor:"rgb(233,235,238)",marginTop:1,marginHorizontal:5,borderRadius:6,paddingHorizontal:10,paddingVertical:0}}
+          placeholder="Search"
+          underlineColorAndroid="transparent" />
+      </Navbar>
+    )
 
     let example = null; //<ToolbarButtonExample />
 
     return (
       <View style={Styles.screenFields}>
-        {header}
+        {header2}
         {example}
         { this.props.loadError && <ErrorHeader text={this.props.loadError} /> }
         <SwipeListView

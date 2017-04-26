@@ -5,6 +5,7 @@ import { ToolbarButton, AvatarImage, ErrorHeader, WorkingOverlay, TopicImage, An
 import { connectprops, PropMap } from "react-redux-propmap"
 import { Field, FieldGroup, TouchableField, DescriptionField } from "../react-native-fieldsX"
 import Layout from "../lib/Layout"
+import Immutable from "immutable"
 import { TopicActions } from "../state/actions"
 import { TopicSelectors } from "../state/selectors"
 import Styles, { Color, Dims, TextSize } from "../styles"
@@ -29,12 +30,24 @@ class TopicDetailGroup extends Component {
         </View>
       )
     }
+
+    let button = null;
+    if (this.props.onRefresh) {
+      if (this.props.refreshing) {
+        button = <ActivityIndicator style={{position:"absolute",top:10,right:13}} />
+      }
+      else {
+        button = <ToolbarButton name={"refresh"} onPress={() => this.props.onRefresh()} style={{position:"absolute",top:2,right:2}} size={20} tint={Color.gray} />
+      }
+    }
+
     return (
-      <View style={{backgroundColor: Color.white}}>
+      <View style={{backgroundColor: Color.white}}>  
         <View style={{paddingHorizontal: 15,paddingVertical: 10,borderTopWidth: 0}}>
           {title}
           {this.props.children}
         </View>
+        {button}
         {this.props.border && <View style={styles.gutter} />}
       </View>
     )
@@ -99,6 +112,7 @@ export default class TopicDetailsScreen extends Component {
     title: " ",
     header: ({state}, defaultHeader) => ({
       ...defaultHeader,
+      style: Styles.navbarBorderless,
       right: <ToolbarButton name="more-horz" tint={Color.tint} onPress={() => state.params.rightClick()} />
     })
   }
@@ -118,6 +132,12 @@ export default class TopicDetailsScreen extends Component {
     });
 
     this._pollInit();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!Immutable.is(this.props.collectedResults, nextProps.collectedResults)) {
+      this._pollUpdateWithResults(nextProps.collectedResults);
+    }
   }
 
   componentWillUnmount() {
@@ -310,11 +330,9 @@ export default class TopicDetailsScreen extends Component {
       topic.details.map((detail, i) => {
         if (detail.type == "event") {
           children.push(this._renderEvent(detail, detail.type + i))
-          //children.push(<View key={detail.type + i + "gutter"} style={styles.gutter} />)
         }
         else if (detail.type == "poll") {
           children.push(this._pollRender(detail, detail.type + i))
-          //children.push(<View key={detail.type + i + "gutter"} style={styles.gutter} />)
         }
         else {
           children.push(
@@ -322,7 +340,6 @@ export default class TopicDetailsScreen extends Component {
               <Text style={{fontSize: TextSize.normal}}>{detail.title}</Text>
             </TopicDetailGroup>
           )
-          //children.push(<View key={detail.type + i + "gutter"} style={styles.gutter} />)
         }
       });
     }
@@ -349,6 +366,19 @@ export default class TopicDetailsScreen extends Component {
 
   _pollInit() {
     if (this._pollCanShowResults() && !this.props.isCollectingResults && !this.props.hasCollectedResults) {
+
+      // set initial answer graph widths in state
+      let detail = this._getDetails("poll");
+      let data = this._pollGetData(detail);
+      let widths = {};
+      data.map(d => widths["point" + d.index] = new Animated.Value(16));
+      this.setState({
+        poll: {
+          widths: widths
+        }
+      });
+
+      // kick-off collection
       this.props.collectResults(this.props.topic.id);
     }
   }
@@ -357,12 +387,48 @@ export default class TopicDetailsScreen extends Component {
     this.props.clearResults();
   }
 
+  _pollUpdateWithResults(results) {
+    // set initial answer graph widths in state
+    let detail = this._getDetails("poll");
+    let data = this._pollGetData(detail, results);
+    let widths = {};
+    Animated.parallel(data.map(d => {
+      return Animated.timing(this.state.poll.widths["point" + d.index], {toValue: d.width})
+    })).start()
+  }
+
   _pollCanShowResults() {
-    let details = this._getDetails("poll");
-    if (details) {
-      return (this.props.isOwner || (this._pollHasSelected() && details.publicResults));
+    let detail = this._getDetails("poll");
+    if (detail) {
+      return (this.props.isOwner || (this._pollHasSelected() && detail.publicResults));
     }
     return false;
+  }
+
+  _pollGetData(detail, results) {
+    let data = [];
+    detail.answers.map((ans, i) => {
+      let votes = 0;
+      let selected = i + 1;
+      if (results) {
+        results.map(s => {
+          if (s.results) {
+            s.results.map(r => {
+              if (r.type && r.type == "poll" && r.selected == selected) {
+                votes++;
+              }
+            })
+          }
+        })
+      }
+      data.push({
+        index: (i + 1),
+        answer: ans,
+        votes: votes,
+        width: votes == 0 ? 16 : (300 / results.size * votes)
+      })
+    })
+    return data;
   }
 
   _pollRender(detail, key) {
@@ -379,41 +445,19 @@ export default class TopicDetailsScreen extends Component {
     if (this._pollCanShowResults()) {
 
       // create results data
-      let data = [];
-      detail.answers.map((ans, i) => {
-        let votes = 0;
-        let selected = i + 1;
-        this.props.collectedResults.map(s => {
-          if (s.results) {
-            s.results.map(r => {
-              if (r.type && r.type == "poll" && r.selected == selected) {
-                votes++;
-              }
-            })
-          }
-        })
-        data.push({
-          answer: ans,
-          votes: votes,
-          width: votes == 0 ? 16 : (300 / this.props.collectedResults.size * votes)
-        })
-      });
-
+      let data = this._pollGetData(detail, this.props.collectedResults);
       let selected = this._pollGetSelected();
 
       resultsPanel = (
-        <TopicDetailGroup title="Results" border={true}>
-          {!this.props.hasCollectedResults &&
-          <ActivityIndicator />}
+        <TopicDetailGroup title="Results" border={true} refreshing={!this.props.hasCollectedResults} onRefresh={() => this.props.collectResults(this.props.topic.id)}>
           <View style={{paddingTop:8}}>
-          {this.props.hasCollectedResults && data.map((point, i) => {
+          {data.map((point, i) => {
+            let width = this.state.poll.widths ? this.state.poll.widths["point" + point.index] : 16;
             return (
               <View style={styles.pollResultsItem} key={i}>
                 <Text style={styles.pollResultsLabel}>{point.answer}</Text>
                 <View style={styles.pollResultsData}>
-                  {point.width &&
-                    <Animated.View style={[styles.pollResultsBar, styles["pollResultsPoints" + (i + 1)], {width: point.width}]} />
-                  }
+                  <Animated.View style={[styles.pollResultsBar, styles["pollResultsPoints" + (i + 1)], {width: width}]} />
                   <Text style={styles.pollResultsDataNumber}>{point.votes}</Text>
                   {selected == (i + 1) && <View style={{backgroundColor:Color.tint,borderRadius:5,marginLeft:6,padding:2,height:16}}>
                     <Text style={[styles.pollResultsDataNumber, {fontSize:9,padding:0,color:Color.white}]}>{"YOU"}</Text>

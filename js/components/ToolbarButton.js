@@ -61,7 +61,7 @@ export default class ToolbarButton extends Component {
         break;
       }
       default: {
-        icon = (<SimpleLineIcon name={this.props.name} size={25} color={this.props.tint} style={[styles.icon, this.props.styleImage]} />);
+        icon = (<SimpleLineIcon name={this.props.name} size={this.props.size || 25} color={this.props.tint} style={[styles.icon, this.props.styleImage]} />);
         break;
       }
     }
