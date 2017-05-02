@@ -15,6 +15,8 @@ import UserCell from "./UserCell"
 import UserSelectListView from "./UserSelectListView"
 import AnimatedModal from "./AnimatedModal"
 import ActionButton from "./ActionButton"
+import TopicDetailGroup from "./TopicDetailGroup"
+import TopicDetailField from "./TopicDetailField"
 
 //import WorkingOverlay from "react-native-loading-spinner-overlay"
 
@@ -35,5 +37,7 @@ export {
   UserCell,
   UserSelectListView,
   AnimatedModal,
-  ActionButton
+  ActionButton,
+  TopicDetailGroup,
+  TopicDetailField
 }
