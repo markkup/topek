@@ -207,7 +207,7 @@ export default class TopicsScreen extends Component {
     }
 
     return (
-      <TouchableHighlight onPress={onPress} underlayColor="#eee">
+      <TouchableHighlight onPress={onPress}>
         <View style={styles.row}>
           
           <View style={styles.rowInfo}>

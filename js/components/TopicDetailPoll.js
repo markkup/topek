@@ -11,9 +11,9 @@ export default class TopicDetailPoll extends TopicDetailBase {
 
   constructor(props) {
     super(props);
+    this.key = "poll";
     this.state = {
-      poll: {}
-    };
+    }
   }
 
   init() {
@@ -24,13 +24,13 @@ export default class TopicDetailPoll extends TopicDetailBase {
     this.props.clearResults();
   }
 
-  updateWithResults(results) {
+  updateWithCollectedResults(results) {
     // set initial answer graph widths in state
     let data = this._pollGetData(results);
     let widths = {};
     setTimeout(() => {
       Animated.parallel(data.map(d => {
-        return Animated.timing(this.state.poll.widths["point" + d.index], {toValue: d.width})
+        return Animated.timing(this.state.widths["point" + d.index], {toValue: d.width})
       })).start()
     });
   }
@@ -58,7 +58,7 @@ export default class TopicDetailPoll extends TopicDetailBase {
         <TopicDetailGroup title="Results" border={true} refreshing={!this.props.hasCollectedResults} onRefresh={() => this._pollLoadResults(true)}>
           <View style={{paddingTop:8}}>
           {data.map((point, i) => {
-            let width = this.state.poll.widths ? this.state.poll.widths["point" + point.index] : 16;
+            let width = this.state.widths ? this.state.widths["point" + point.index] : 16;
             return (
               <View style={styles.pollResultsItem} key={i}>
                 <Text style={styles.pollResultsLabel}>{point.answer}</Text>
@@ -86,7 +86,7 @@ export default class TopicDetailPoll extends TopicDetailBase {
             onPress={() => this._pollSelect(i + 1)}
             underlayColor={"#eee"}>
             <View style={styles.pollAnswer}>
-              {(i + 1) == this.state.poll.selected ?
+              {(i + 1) == this.state.selected ?
               <Ionicon name="ios-radio-button-on" size={28} color={Color.tint} /> :
               <Ionicon name="ios-radio-button-off" size={28} color={Color.subtle} />}
               <Text style={styles.pollAnswerText}>{ans}</Text>
@@ -94,7 +94,7 @@ export default class TopicDetailPoll extends TopicDetailBase {
           </TouchableHighlight>
         )
       })
-      let disabled = this.state.poll.selected === undefined;
+      let disabled = this.state.selected === undefined;
       answersPanel = (
         <TopicDetailGroup border={true}>
           {answers}
@@ -120,14 +120,12 @@ export default class TopicDetailPoll extends TopicDetailBase {
     if (force === undefined) force = false;
     if (this._pollCanShowResults() && !this.props.isCollectingResults && (!this.props.hasCollectedResults || force)) {
       // set initial answer graph widths in state
-      if (!this.state.poll.widths) {
+      if (!this.state.widths) {
         let data = this._pollGetData();
         let widths = {};
         data.map(d => widths["point" + d.index] = new Animated.Value(16));
         this.setState({
-          poll: {
-            widths: widths
-          }
+          widths: widths
         });
       }
 
@@ -153,7 +151,7 @@ export default class TopicDetailPoll extends TopicDetailBase {
         results.map(s => {
           if (s.results) {
             s.results.map(r => {
-              if (r.type && r.type == "poll" && r.selected == selected) {
+              if (r.type && r.type == this.key && r.selected == selected) {
                 votes++;
               }
             })
@@ -172,23 +170,15 @@ export default class TopicDetailPoll extends TopicDetailBase {
 
   _pollSelect(index) {
     this.setState({
-      poll: {
-        selected: index
-      }
+      selected: index
     })
   }
 
   _pollGetSelected() {
-    let result = 0;
-    if (this.props.topicState) {
-      this.props.topicState.results.map(r => {
-        if (r.type && r.type == "poll") {
-          if (r.selected)
-            result = r.selected;
-        }
-      });
-    }
-    return result;
+    let results = this.getIndividualResults();
+    if (results.selected)
+      return results.selected;
+    return 0;
   }
 
   _pollHasSelected() {
@@ -208,21 +198,9 @@ export default class TopicDetailPoll extends TopicDetailBase {
   }
 
   async _pollSubmit() {
-    let results = this.props.topicState.results.slice(0);
-    let pollResult = null;
-    results.map(r => {
-      if (r.type && r.type == "poll")
-        pollResult = r;
-    });
-    if (!pollResult) {
-      pollResult = { type: "poll" };
-      results.push(pollResult);
-    }
-
-    pollResult.selected = this.state.poll.selected;
-
-    await this.props.updateTopicState(this.props.topic.id, "results", results);
-
+    await this.submit({
+      selected: this.state.selected
+    })
     this._pollLoadResults();
   }
 

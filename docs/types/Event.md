@@ -54,8 +54,42 @@ Structure
 ---------
 ```
 {
+  type: "event",
+  allDay: bool,
+  startDate: datetime,
+  endDate: datetime,
+  reminder: Reminder,
+  location: Location,
+  locationName: string,
+  ack: bool, // whether we should ask for RSVP 
+}
 
+Reminder = {
+  amount: int, // number of period
+  period: string, // minutes|hours|days|weeks|months
+  text: string, // textual description of amount & period, ie '1 week before'
+}
+
+Location = {
+  name: string,
+  geo: {
+    lat: decimal,
+    lng: decimal
+  },
+  address: string,
+  viewport: {
+    lat: decimal,
+    lng: decimal
+  }
 }
 ```
 
+Result
+------
+```
+{
+  type: "event",
+  response: int, // 0=no, 1=yes, 2=maybe
+}
+```
 

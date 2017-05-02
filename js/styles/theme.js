@@ -22,7 +22,7 @@ const Color = {
     lightGray: "rgb(233, 235, 238)",
     gray: "rgb(200, 200, 200)",
     darkGray: "#777",
-    slate: "#555",
+    slate: "#333",
 }
 
 const Dims = {
