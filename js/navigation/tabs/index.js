@@ -13,7 +13,8 @@ import GroupTab from "./GroupTab"
 
 const tabsOptions = {
     initialRouteName: "Topics",
-    lazyLoad: false,
+    lazy: true,
+    swipeEnabled: false,
     tabBarPosition: "bottom",
     tabBarOptions: {
         inactiveTintColor: Color.tintInactive,

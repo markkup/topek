@@ -4,6 +4,7 @@ import Immutable from "immutable"
 const getTopics = state => state.topics.list
 const getTopicStates = state => state.topicStates.list
 const getOrgMembers = state => state.members.list
+const getOrgOwner = state => state.prefs.org.owner
 const getSelectedTopic = state => state.topics.selectedTopic
 const getTopicStateIsUpdatingTopicId = state => state.topicStates.isUpdatingTopicId
 const getTopicStateUpdateErrorTopicId = state => state.topicStates.updateErrorTopicId
@@ -17,11 +18,14 @@ function collectTopicMembers(ids, memberList) {
 }
 
 function setTopicMembers(topic, memberList) {
-  if (!topic || !topic.memberIds || !Array.isArray(topic.memberIds)) return;
+  if (!topic || !topic.memberIds || !Array.isArray(topic.memberIds)) 
+    return;
+  let owner = topic.owner;
   for (var i=0; i<topic.memberIds.length; i++) {
     if (topic.memberIds[i] == "*") {
-      topic.memberCount = memberList.size;
-      topic.members = collectTopicMembers("*", memberList);
+      let membersWithoutTopicOwner = memberList.remove(owner.id);
+      topic.memberCount = membersWithoutTopicOwner.size;
+      topic.members = collectTopicMembers("*", membersWithoutTopicOwner);
       return;
     }
   }
@@ -29,8 +33,15 @@ function setTopicMembers(topic, memberList) {
   topic.members = collectTopicMembers(topic.memberIds, memberList);
 }
 
+export const getOrgEveryone = createSelector(
+  [getOrgMembers, getOrgOwner],
+  (members, owner) => {
+    return members.set(owner.id, owner);
+  }
+)
+
 export const getTopicList = createSelector(
-  [getTopics, getTopicStates, getOrgMembers],
+  [getTopics, getTopicStates, getOrgEveryone],
   (topics, topicStates, orgMembers) => {
     let resMap = new Immutable.OrderedMap().withMutations(res => {
       topics.map(topic => {
@@ -55,7 +66,7 @@ export const getTopicList = createSelector(
 )
 
 export const getCurrentTopic = createSelector(
-  [getSelectedTopic, getOrgMembers],
+  [getSelectedTopic, getOrgEveryone],
   (topic, orgMembers) => {
     setTopicMembers(topic, orgMembers);
     return topic;

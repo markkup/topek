@@ -38,7 +38,7 @@ export default class AlertsPage extends Component {
     return (
       <View style={styles.row}>
         <IonIcon name="ios-alert" size={21} color={Color.tint} />
-        <Text style={{flex:1, fontSize:18, marginLeft: 12}}>{text}</Text>
+        <Text style={{flex:1, fontSize:TextSize.small, marginLeft: 12}}>{text}</Text>
         {/*<View style={{flexDirection: "column", alignItems: "center", marginLeft: 20}}>
           <Text style={{fontSize: 11, color: "#555"}}>{date}</Text>
           <Text style={{fontSize: 11, color: "#555"}}>{time}</Text>

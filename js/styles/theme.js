@@ -21,6 +21,8 @@ const Color = {
     pink: "rgb(255, 45, 85)",
     lightGray: "rgb(233, 235, 238)",
     gray: "rgb(200, 200, 200)",
+    darkGray: "#777",
+    slate: "#555",
 }
 
 const Dims = {

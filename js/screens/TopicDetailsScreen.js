@@ -1,7 +1,7 @@
 
 import React, { Component } from "react"
 import { StyleSheet, View, Text, Button, Animated, ActivityIndicator, Image, TouchableOpacity, TouchableHighlight } from "react-native"
-import { ToolbarButton, AvatarImage, ErrorHeader, WorkingOverlay, TopicImage, AnimatedModal, Toolbar } from "../components"
+import { ToolbarButton, AvatarImage, ErrorHeader, WorkingOverlay, TopicImage, AnimatedModal, Toolbar, ActionButton } from "../components"
 import { connectprops, PropMap } from "react-redux-propmap"
 import { Field, FieldGroup, TouchableField, DescriptionField } from "../react-native-fieldsX"
 import Layout from "../lib/Layout"
@@ -26,7 +26,7 @@ class TopicDetailGroup extends Component {
     if (this.props.title) {
       title = (
         <View>
-          <Text style={{color:"#777"}}>{this.props.title.toUpperCase()}</Text>
+          <Text style={{color:Color.darkGray}}>{this.props.title.toUpperCase()}</Text>
         </View>
       )
     }
@@ -37,7 +37,7 @@ class TopicDetailGroup extends Component {
         button = <ActivityIndicator style={{position:"absolute",top:10,right:13}} />
       }
       else {
-        button = <ToolbarButton name={"refresh"} onPress={() => this.props.onRefresh()} style={{position:"absolute",top:2,right:2}} size={20} tint={Color.gray} />
+        button = <ToolbarButton name={"refresh"} onPress={() => this.props.onRefresh()} style={{position:"absolute",top:2,right:2}} size={20} tint={Color.darkGray} />
       }
     }
 
@@ -68,7 +68,7 @@ class TopicDetailField extends Component {
     if (this.props.title) {
       title = (
         <View>
-          <Text style={{color:"#777"}}>{this.props.title.toUpperCase()}</Text>
+          <Text style={{color:Color.darkGray,fontWeight:"500"}}>{this.props.title.toUpperCase()}</Text>
         </View>
       )
     }
@@ -78,8 +78,8 @@ class TopicDetailField extends Component {
         <SimpleLineIcon name={this.props.icon} size={16} color={Color.subtle} style={{marginRight: 10,marginTop:2}} /> :
         null}
         <View style={{flex:1}}>
-          <Text style={{color:"#555",fontSize:TextSize.normal}}>{this.props.text}</Text>
-          {this.props.subtext && <Text style={{color:"#999",fontSize:TextSize.tiny}}>{this.props.subtext}</Text>}
+          <Text style={{color:Color.slate,fontSize:TextSize.normal}}>{this.props.text}</Text>
+          {this.props.subtext && <Text style={{color:Color.subtle,fontSize:TextSize.tiny}}>{this.props.subtext}</Text>}
         </View>
       </View>
     )
@@ -102,6 +102,7 @@ class Props extends PropMap {
     props.collectResults = this.bindEvent(TopicActions.collectResults);
     props.clearResults = this.bindEvent(TopicActions.clearResults);
     props.deleteClick = this.bindEvent(TopicActions.destroy);
+    props.dismissTopic = this.bindEvent(TopicActions.dismissTopic);
   }
 }
 
@@ -215,10 +216,9 @@ export default class TopicDetailsScreen extends Component {
 
         <ActionSheet 
           ref={(c) => this.moreSheetForMember = c}
-          title="You cannot edit this topic"
-          options={["Cancel"]}
-          cancelButtonIndex={1}
-          destructiveButtonIndex={0}
+          title="Only the owner can edit this"
+          options={["Cancel", "Ignore"]}
+          cancelButtonIndex={0}
           onPress={this._handleMoreForMember.bind(this)}
         />
       </View>
@@ -365,18 +365,24 @@ export default class TopicDetailsScreen extends Component {
   }
 
   _pollInit() {
-    if (this._pollCanShowResults() && !this.props.isCollectingResults && !this.props.hasCollectedResults) {
+    this._pollLoadResults();
+  }
 
+  _pollLoadResults(force) {
+    if (force === undefined) force = false;
+    if (this._pollCanShowResults() && !this.props.isCollectingResults && (!this.props.hasCollectedResults || force)) {
       // set initial answer graph widths in state
-      let detail = this._getDetails("poll");
-      let data = this._pollGetData(detail);
-      let widths = {};
-      data.map(d => widths["point" + d.index] = new Animated.Value(16));
-      this.setState({
-        poll: {
-          widths: widths
-        }
-      });
+      if (!this.state.poll.widths) {
+        let detail = this._getDetails("poll");
+        let data = this._pollGetData(detail);
+        let widths = {};
+        data.map(d => widths["point" + d.index] = new Animated.Value(16));
+        this.setState({
+          poll: {
+            widths: widths
+          }
+        });
+      }
 
       // kick-off collection
       this.props.collectResults(this.props.topic.id);
@@ -449,7 +455,7 @@ export default class TopicDetailsScreen extends Component {
       let selected = this._pollGetSelected();
 
       resultsPanel = (
-        <TopicDetailGroup title="Results" border={true} refreshing={!this.props.hasCollectedResults} onRefresh={() => this.props.collectResults(this.props.topic.id)}>
+        <TopicDetailGroup title="Results" border={true} refreshing={!this.props.hasCollectedResults} onRefresh={() => this._pollLoadResults(true)}>
           <View style={{paddingTop:8}}>
           {data.map((point, i) => {
             let width = this.state.poll.widths ? this.state.poll.widths["point" + point.index] : 16;
@@ -488,16 +494,15 @@ export default class TopicDetailsScreen extends Component {
           </TouchableHighlight>
         )
       })
-      let bgColor = this.state.poll.selected ? Color.tint : Color.lightGray;
       let disabled = this.state.poll.selected === undefined;
       answersPanel = (
         <TopicDetailGroup border={true}>
           {answers}
-          <TouchableOpacity style={{width: 100,marginTop: 14, marginLeft: 0,marginBottom: 10}} disabled={disabled} onPress={() => this._pollSubmit()}>
-            <View style={{backgroundColor: bgColor,borderRadius: 4,padding: 10}}>
-              <Text style={{color: Color.white,fontWeight: "600", fontSize: TextSize.normal,textAlign: "center"}}>{"Submit"}</Text>
-            </View>
-          </TouchableOpacity>
+          <ActionButton 
+            title={"Submit"} 
+            onPress={() => this._pollSubmit()}
+            disabled={disabled}
+            style={{marginTop: 14, marginLeft: 0,marginBottom: 10}} />
         </TopicDetailGroup>
       )
     }
@@ -563,9 +568,7 @@ export default class TopicDetailsScreen extends Component {
 
     await this.props.updateTopicState(this.props.topic.id, "results", results);
 
-    if (this._pollCanShowResults()) {
-      this.props.collectResults(this.props.topic.id);
-    }
+    this._pollLoadResults();
   }
 
   _renderEvent(detail, key) {
@@ -628,11 +631,35 @@ export default class TopicDetailsScreen extends Component {
       )
     }
 
+    let actions = null;
+    if (detail.ack) {
+      actions = (
+        <View style={{flexDirection: "row"}}>
+          <ActionButton 
+            title={"I'm Going"} 
+            tint={Color.gray}
+            onPress={() => {}}
+            style={{marginTop: 15, marginLeft: 0, marginBottom: 5}} />
+          <ActionButton 
+            title={"Maybe"} 
+            tint={Color.gray}
+            onPress={() => {}}
+            style={{marginTop: 15, marginLeft: 5, marginBottom: 5}} />
+          <ActionButton 
+            title={"No"} 
+            tint={Color.gray}
+            onPress={() => {}}
+            style={{marginTop: 15, marginLeft: 5, marginBottom: 5}} />
+        </View>
+      )
+    }
+
     return (
       <View key={key}>
         <TopicDetailGroup>
           <TopicDetailField text={when} icon="clock" />
           {where}
+          {actions}
         </TopicDetailGroup>
       </View>
     )
@@ -648,8 +675,11 @@ export default class TopicDetailsScreen extends Component {
     }
   }
 
-  _handleMoreForMember(index) {
-    
+  async _handleMoreForMember(index) {
+    if (index == 1) {
+      await this.props.dismissTopic(this.props.topic.id, true);
+      this.props.navigation.goBack(null);
+    }
   }
 
   _showPhotoViewer(visible) {
@@ -707,8 +737,8 @@ let styles = StyleSheet.create({
   owner: {
     flex: 1,
     fontSize: 16,
-    fontWeight: "500",
-    color: "#666",
+    fontWeight: "600",
+    color: Color.slate,
     marginTop: 1,
     marginLeft: 4
   },
@@ -778,7 +808,8 @@ let styles = StyleSheet.create({
     paddingHorizontal: 0
   },
   pollResultsLabel: {
-    color: Color.subtle,
+    color: Color.slate,
+    fontWeight: "600",
     flex: 1,
     fontSize: 14,
     position: 'relative',
